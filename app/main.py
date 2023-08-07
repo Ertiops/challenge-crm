@@ -1,14 +1,15 @@
-from fastapi import FastAPI
+from flask import Flask, render_template
 
-from routers import booking
+from blueprints.admin.admin import admin
 
-app = FastAPI()
+app = Flask(__name__, template_folder='./templates')
 
-app.include_router(booking.booking)
+app.register_blueprint(admin, url_prefix="/admin")
+
+@app.route("/")
+def login():
+    return render_template('login.html')
 
 
-
-
-# @app.get("/items/{id}", response_class=HTMLResponse)
-# async def read_item(request: Request, id: str):
-#     return templates.TemplateResponse("item.html", {"request": request, "id": id})
+if __name__ == "__main__":
+    app.run(debug=True)
