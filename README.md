@@ -3,5 +3,5 @@
 * clone repository;
 * initiate python venv;
 * load libraries from requirements.txt;
-* load uvicorn;
+* run main.py;
 * work.
