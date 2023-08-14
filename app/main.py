@@ -16,14 +16,30 @@ def login():
     if request.method == 'POST':
         email = request.form['email']
         password = request.form['password']
-        print(email, '/n',password)
         result = crud.check_user(email, password)
-        # if result is None:
-        #     flash("Пользователь не зарегистрирован", category="error")
+        if result is None or result is False:
+            flash("Неверный Email или пароль", category="danger")
+        else:
+            role = crud.get_user(email).role
+            print(role)
+            if role == 'owner':
+                return redirect(url_for('admin.index'))
 
 
     return render_template('login.html')
 
+# @app.route("/", methods=['GET', 'POST'])
+# def login():
+    # if request.method == 'POST':
+    #     email = request.form['email']
+    #     password = request.form['password']
+    #     print(email, '/n',password)
+    #     result = crud.check_user(email, password)
+        # if result is None:
+        #     flash("Пользователь не зарегистрирован", category="error")
+
+
+    # return render_template('experiment.html')
 
 if __name__ == "__main__":
     app.run(debug=True)

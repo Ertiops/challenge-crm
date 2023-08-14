@@ -1,23 +1,15 @@
 from flask import Blueprint, render_template, redirect
 
 
-admin = Blueprint("admin", __name__, template_folder="templates")
+admin = Blueprint("admin", __name__, template_folder="templates/admin")
 
-@admin.route("/")
+@admin.route("/", methods=['GET'])
 def index():
-    return "Hello World!"
+    return render_template('index.html')
 
 
-@admin.route("/hello")
-def hello():
-    return "Hello World Again!"
+# добавка в бд бронирований
 
 
-@admin.route("/hello/<name>")
-def hello_name(name):
-    return f"Hello {name}"
 
-
-@admin.route("/hellohtml")
-def hello_html():
-    return render_template("admin/hello.html")
+# отсылка данных в другой роутер и повтор функционала псевдостраницы с бронированием

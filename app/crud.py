@@ -31,6 +31,12 @@ def check_user(email, password):
         return result
     else:
         return None
+    
+def get_user(email):
+    query = session.query(Users).filter_by(email=email).first()
+    return query
+
+
 
 # u = 
 # print(u.check_password('12345'))
