@@ -21,7 +21,6 @@ def login():
             flash("Неверный Email или пароль", category="danger")
         else:
             role = crud.get_user(email).role
-            print(role)
             if role == 'owner':
                 return redirect(url_for('admin.index'))
 
