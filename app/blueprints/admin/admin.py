@@ -6,7 +6,7 @@ admin = Blueprint("admin", __name__, template_folder="templates", static_folder=
 # не тргоай пока
 @admin.route("/", methods=['GET'])
 def index():
-    return render_template('sidebar.html')
+    return render_template('index.html')
 
 
 # добавка в бд бронирований
