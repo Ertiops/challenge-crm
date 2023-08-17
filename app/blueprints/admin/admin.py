@@ -5,8 +5,12 @@ admin = Blueprint("admin", __name__, template_folder="templates", static_folder=
 
 # не тргоай пока
 @admin.route("/", methods=['GET'])
-def index():
-    return render_template('index.html')
+def statistics():
+    return render_template('statistics.html', title='Статистика')
+
+@admin.route("/franchises", methods=['GET', 'POST'])
+def franchises():
+    return render_template('franchises.html', title='Франшизы')
 
 
 # добавка в бд бронирований

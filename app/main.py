@@ -22,23 +22,12 @@ def login():
         else:
             role = crud.get_user(email).role
             if role == 'owner':
-                return redirect(url_for('admin.index'))
+                return redirect(url_for('admin.statistics'))
 
 
     return render_template('login.html')
 
-# @app.route("/", methods=['GET', 'POST'])
-# def login():
-    # if request.method == 'POST':
-    #     email = request.form['email']
-    #     password = request.form['password']
-    #     print(email, '/n',password)
-    #     result = crud.check_user(email, password)
-        # if result is None:
-        #     flash("Пользователь не зарегистрирован", category="error")
 
-
-    # return render_template('experiment.html')
 
 if __name__ == "__main__":
     app.run(debug=True)
