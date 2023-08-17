@@ -1,8 +1,5 @@
 from flask import Flask, render_template, request, redirect, url_for, flash
 from werkzeug.security import check_password_hash
-from sqlalchemy import create_engine
-from sqlalchemy.orm import Session
-from models.models import Reservations
 import crud
 from blueprints.admin.admin import admin
 
@@ -47,26 +44,10 @@ def formreturns():
     price = request.form['price']
     franchise = request.form['franchise']
 
-    add_reservation(name, phone, email, quest, date, time, guest_num, price, franchise)
+    crud.add_reservation(name, phone, email, quest, date, time, guest_num, price, franchise)
 
     return redirect(url_for('login'))
     # return str(date)
-
-
-def add_reservation(name, phone, mail, quest, date, time, guest_number, price, franchise):
-    reservations = Reservations(
-        name = name,
-        phone = phone,
-        mail = mail,
-        quest = quest,
-        date = date,
-        time = time,
-        guest_number = guest_number,
-        price = price,
-        franchise = franchise
-        )
-    crud.session.add(reservations)
-    crud.session.commit()
 
 
 if __name__ == "__main__":

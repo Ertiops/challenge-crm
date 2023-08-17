@@ -2,6 +2,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import Session
 from config import DB_USER, DB_PASS, DB_HOST, DB_PORT, DB_NAME
 from models.models import Users
+from models.models import Reservations
 
 engine = create_engine(f"postgresql+psycopg2://{DB_USER}:{DB_PASS}@{DB_HOST}:{DB_PORT}/{DB_NAME}")
 
@@ -21,6 +22,22 @@ def add_user(first_name, last_name, email, password, role, franchise):
     session.commit()
 
 # add_user('Илья', 'Томин', 'straxisrule@gmail.com', '12345', 'owner', 'all')
+
+
+def add_reservation(name, phone, mail, quest, date, time, guest_number, price, franchise):
+    reservations = Reservations(
+        name = name,
+        phone = phone,
+        mail = mail,
+        quest = quest,
+        date = date,
+        time = time,
+        guest_number = guest_number,
+        price = price,
+        franchise = franchise
+        )
+    session.add(reservations)
+    session.commit()
 
 
 def check_user(email, password):
