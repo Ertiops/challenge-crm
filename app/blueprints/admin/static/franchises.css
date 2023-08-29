@@ -1,0 +1,22 @@
+   
+  .btn-color-1 {
+    color: #fff;
+    background-color: #004E64;
+    border-color: #004E64;
+    font-weight: bold;
+    letter-spacing: 0.05em;
+    border-radius: 0;
+    max-width:30em;
+  }
+  
+  .btn-color-1:hover,
+  .btn-color-1:active,
+  .btn-color-1:focus,
+  .btn-color-1.active {
+    /* let's darken #004E64 a bit for hover effect */
+    background: #003D4F;
+    color: #ffffff;
+    border-color: #003D4F;
+  }
+
+  

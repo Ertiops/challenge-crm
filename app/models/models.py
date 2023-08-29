@@ -26,7 +26,11 @@ class Users(Base):
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
     
-    
+
+
+
+
+
 class Reservations(Base):
     __tablename__ = 'reservations'
 
@@ -41,6 +45,9 @@ class Reservations(Base):
     guest_number = Column(Integer, nullable=False)
     price = Column(String(30), nullable=False)
     franchise = Column(String(120), nullable=False)
+
+
+
 
 
 
