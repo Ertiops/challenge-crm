@@ -46,8 +46,8 @@ function validatePassword() {
       'submit',
       function (event) {
         if (
-          !form.checkValidity() ||
-          !validateEmail() ||
+          !form.checkValidity() &&
+          !validateEmail() &&
           !validatePassword()
         ) {
           event.preventDefault();

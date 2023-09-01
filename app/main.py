@@ -27,6 +27,22 @@ def login():
 
     return render_template('login.html')
 
+@app.route("/owner", methods=['GET', 'POST'])
+def login_owner():
+    if request.method == 'POST':
+        email = request.form['email']
+        password = request.form['password']
+        result = crud.check_owner(email, password)
+        if result is None or result is False:
+            flash("Неверный Email или пароль", category="danger")
+        else:
+            role = crud.get_owner(email).role
+            if role == 'owner':
+                return redirect(url_for('admin.statistics'))
+
+
+    return render_template('login_owner.html')
+
 
 @app.route("/formfields", methods=['GET', 'POST'])
 def formfields():
