@@ -14,26 +14,25 @@
             </div>
         </div>
 
-        <!-- <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-scrollable">
                 <div class="modal-content">
+                    <form class="needs-validation" id="addForm" method="post" novalidate></form>
                     <div class="modal-header">
-                      <h5 class="modal-title" id="staticBackdropLabel">Регистрация Франшизы</h5>
-                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        <h5 class="modal-title" id="staticBackdropLabel">Регистрация Франшизы</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
-                    <form class="needs-validation" method="POST" novalidate>
-                        <div class="modal-body">
-                            <div class="row g-3">                                       
-                            {% for cat, msg in get_flashed_messages(True) %}                                       
-                                <div class="form-label-group">
-                                    <div class="alert alert-{{cat}} alert-dismissible fade show" role="alert">
-                                        {{ msg }}
-                                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                                    </div>
+                    <div class="modal-body">                                      
+                        {% for cat, msg in get_flashed_messages(True) %}                                       
+                            <div class="form-label-group">
+                                <div class="alert alert-{{cat}} alert-dismissible fade show" role="alert">
+                                    {{ msg }}    
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>                        
                                 </div>
-                            </div>                                       
-                            {% endfor %} 
-                            </br>
+                            </div>                                      
+                        {% endfor %} 
+                        </br>
+
                             <div class="form-label-group">                                        
                                 <input type="text" id="city" name="city" class="form-control"  placeholder="City" autocomplete="off" required>
                                 <label for="city">Город</label>
@@ -69,16 +68,18 @@
                                 <label for="password">Пароль</label>
                                 <div class="invalid-feedback">Заполните это поле</div>                                        
                             </div>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                            <button type="submit" id="submit" class="btn btn-primary" name="submit" value="Add">Зарегистрировать</button>
-                        </div>
-                    </form>
-                  </div>
+
+                        
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" id="submit" class="btn btn-primary" name="submit" form="addForm" value="Add">Зарегистрировать</button>
+                    </div>
+                </form>
                 </div>
             </div>
-        </div> -->
+        </div>
+
 
         {% if franchises %}
         <div class="col table-responsive">
@@ -92,81 +93,19 @@
                     </tr>
                 </thead>
                 <tbody>
+                    {% for franchise in franchises %}
                     <tr>
                         <th scope="row">1</th>
-                        <td>Набережные Челны</td>
-                        <td>Кагарманов Д. | 89534087334 | straxisrule@gmail.com</td>
+                        <td>{{franchise.Franchises.city}}</td>
+                        <td>{{franchise.Users.last_name}} Д. | 89534087334 | straxisrule@gmail.com</td>
                         <td>
-                            <!-- <a href="#" class="btn btn-color-1 btn-sm" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+                            <a href="#" class="btn btn-color-1 btn-sm" data-bs-toggle="modal" data-bs-target="#exampleModal2">
                                 <i class="far fa-edit"></i>
                                  Изменить
-                            </a> -->
+                            </a>
                         </td>
-                        <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-                            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-                              <div class="modal-content">
-                                <div class="modal-header">
-                                  <h5 class="modal-title" id="staticBackdropLabel">Регистрация Франшизы</h5>
-                                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                </div>
-                                <form class="needs-validation" method="POST" novalidate>
-                                    <div class="modal-body">
-                                        <div class="row g-3">                                       
-                                        {% for cat, msg in get_flashed_messages(True) %}                                       
-                                            <div class="form-label-group">
-                                                <div class="alert alert-{{cat}} alert-dismissible fade show" role="alert">
-                                                    {{ msg }}
-                                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                                                </div>
-                                            </div>
-                                        </div>                                       
-                                        {% endfor %} 
-                                        </br>
-                                        <div class="form-label-group">                                        
-                                            <input type="text" id="city" name="city" class="form-control"  placeholder="City" autocomplete="off" required>
-                                            <label for="city">Город</label>
-                                            <div id="city-validation" class="invalid-feedback">Заполните это поле</div>                                    
-                                        </div>  
-                                        <div class="form-label-group">                                        
-                                            <input type="text" id="lastName" name="lastName" class="form-control"  placeholder="Last Name" autocomplete="off" required>
-                                            <label for="lastName">Фамилия</label>
-                                            <div id="lastname-validation" class="invalid-feedback">Введите корректную фамилию (кириллица без пробелов)</div>                                    
-                                        </div>                                            
-                                        <div class="form-label-group">                                        
-                                            <input type="text" id="firstName" name="firstName" class="form-control"  placeholder="First Name" autocomplete="off" required>
-                                            <label for="firstName">Имя</label>
-                                            <div id="firstname-validation" class="invalid-feedback">Введите корректное имя (кириллица без пробелов)</div>                                    
-                                        </div>                                           
-                                        <div class="form-label-group">                                        
-                                            <input type="text" id="patronymic" name="patronymic" class="form-control"  placeholder="Patronymic" autocomplete="off" required>
-                                            <label for="patronymic">Отчество</label>
-                                            <div id="patronymic-validation" class="invalid-feedback">Введите корректное имя (кириллица без пробелов)</div>                                    
-                                        </div>                                            
-                                        <div class="form-label-group">                                        
-                                            <input type="email" id="email" name="email" class="form-control"  placeholder="Email address" autocomplete="off" required>
-                                            <label for="email">Адрес электронной почты</label>
-                                            <div id="email-validation" class="invalid-feedback">Введите корректный адрес электронной почты</div>                                       
-                                        </div>                                        
-                                        <div class="form-label-group">                                        
-                                            <input type="tel" id="phone" name="phone" class="form-control"  placeholder="Phone number" autocomplete="off" pattern= required>
-                                            <label for="phone">Номер телефона</label>
-                                            <div id="phone-validation" class="invalid-feedback">Введите номер по типу: 89134785678</div>                                       
-                                        </div>                                             
-                                        <div class="form-label-group">
-                                            <input type="password" id="password" name="password" class="form-control" placeholder="Password" required>
-                                            <label for="password">Пароль</label>
-                                            <div class="invalid-feedback">Заполните это поле</div>                                        
-                                        </div>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                        <button type="submit" id="submit" class="btn btn-primary" name="submit" value="Add">Зарегистрировать</button>
-                                    </div>
-                                </form>
-                              </div>
-                            </div>
-                        </div>
                     </tr>
+                    {% endfor %}
                 </tbody>
             </table>
         </div>
@@ -180,6 +119,8 @@
 </br>
 
 <script src="./static/franchises.js"></script>
+
+
 
 
 {% endblock %}
