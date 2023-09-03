@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, flash
+from flask import Flask, render_template, request, redirect, url_for, flash, abort
 from werkzeug.security import check_password_hash
 import crud
 from blueprints.admin.admin import admin
@@ -21,8 +21,10 @@ def login():
             flash("Неверный Email или пароль", category="danger")
         else:
             role = crud.get_user(email).role
-            if role == 'owner':
-                return redirect(url_for('admin.statistics'))
+            if role == ('superuser' or'franchiser' or 'employee' or 'operator'):
+                return redirect(url_for('admin.statistics'))  
+            else:
+                return abort(401)  
 
 
     return render_template('login.html')
@@ -39,6 +41,8 @@ def login_owner():
             role = crud.get_owner(email).role
             if role == 'owner':
                 return redirect(url_for('admin.statistics'))
+            else:
+                return abort(401)
 
 
     return render_template('login_owner.html')
