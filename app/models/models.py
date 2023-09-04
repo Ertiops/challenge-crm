@@ -1,3 +1,4 @@
+from flask_login import UserMixin
 from sqlalchemy import Column, Integer, String, TIMESTAMP, ForeignKey, UUID, DateTime
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
@@ -37,15 +38,15 @@ class Franchises(Base):
 
 
 
-class Users(Base):
+class Users(Base, UserMixin):
     __tablename__ = 'users'
 
     id = Column(UUID(as_uuid=True), default=uuid.uuid4(), primary_key=True)
     first_name = Column(String(30), nullable=False)
     last_name = Column(String(30), nullable=False)
     patronymic = Column(String(30))
-    email = Column(String(30), nullable=False)
-    phone = Column(String(11), nullable=False)
+    email = Column(String(30), nullable=False, unique=True)
+    phone = Column(String(11), nullable=False, unique=True)
     password_hash = Column(String(150), nullable=False)
     role = Column(String(20), nullable=False)
     franchise_id = Column(UUID(as_uuid=True), ForeignKey("franchises.id", ondelete="CASCADE"), nullable=False)
