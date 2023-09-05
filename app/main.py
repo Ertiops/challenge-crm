@@ -2,7 +2,7 @@ from flask_login import login_user, LoginManager, login_required, logout_user, c
 from flask import Flask, render_template, request, redirect, url_for, flash, abort
 from werkzeug.security import check_password_hash
 import crud
-from models.models import Users
+from models.models import Users, Owners
 from blueprints.admin.admin import admin
 
 
@@ -18,6 +18,10 @@ login_manager.login_view = 'login'
 @login_manager.user_loader
 def load_user(user_id):
     return crud.session.query(Users).get(str(user_id))
+
+@login_manager.user_loader
+def load_user(user_id):
+    return crud.session.query(Owners).get(str(user_id))
 
 
 app.register_blueprint(admin, url_prefix="/admin")
@@ -49,7 +53,7 @@ def login_su():
     return render_template('login.html')
 
 
-@app.route("/owner", methods=['GET', 'POST'])
+@app.route("/logout", methods=['GET', 'POST'])
 @login_required
 def logout():
     logout_user()
@@ -59,19 +63,24 @@ def logout():
 
 @app.route("/owner", methods=['GET', 'POST'])
 def login_owner():
-    if request.method == 'POST':
-        email = request.form['email']
-        password = request.form['password']
-        result = crud.check_owner(email, password)
-        if result is None or result is False:
-            flash("Неверный Email или пароль", category="danger")
-        else:
+    
+    if current_user.is_authenticated:
+        return redirect(url_for('admin.statistics'))
+    else:
+        if request.method == 'POST':
+            email = request.form['email']
+            password = request.form['password']
             role = crud.get_owner(email).role
-            if role == 'owner':
-                return redirect(url_for('admin.statistics'))
-            else:
-                return abort(401)
-
+            user = crud.session.query(Owners).filter_by(email=email).first()
+            if user:
+                if check_password_hash(user.password_hash, password):
+                    login_user(user)
+                    if role == 'owner':
+                        return redirect(url_for('admin.statistics'))
+                    else:
+                        abort(401)
+                else:
+                    flash("Неверный Email или пароль", category="danger")
 
     return render_template('login_owner.html')
 

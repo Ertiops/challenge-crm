@@ -10,7 +10,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 Base  = declarative_base()
 
 
-class Owners(Base):
+class Owners(Base, UserMixin):
     __tablename__ = 'owners'
     id = Column(UUID(as_uuid=True), default=uuid.uuid4(), primary_key=True)
     first_name = Column(String(30), nullable=False)
