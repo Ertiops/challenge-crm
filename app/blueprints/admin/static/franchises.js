@@ -6,6 +6,8 @@ document.querySelector('#email').addEventListener('blur', validateEmail);
 document.querySelector('#phone').addEventListener('blur', validatePhone);
 document.querySelector('#password').addEventListener('blur', validatePassword);
 
+document.querySelectorAll("[name='cancel']").forEach((el) => {el.addEventListener('blur', clearInput)});
+
 const reSpaces = /^\S*$/;
 
 
@@ -131,7 +133,7 @@ function validatePassword() {
       'submit',
       function (event) {
         if (
-          // !form.checkValidity() ||
+          !form.checkValidity() ||
           !validateCity() ||
           !validateFirstName() ||
           !validateLastName() ||
@@ -150,3 +152,21 @@ function validatePassword() {
     );
   }
 })();
+
+function clearInput() {
+  document.getElementById('city').value = '';
+  document.querySelector('#city').classList.remove('is-invalid', 'is-valid');
+  document.getElementById('lastName').value = '';
+  document.querySelector('#lastName').classList.remove('is-invalid', 'is-valid');
+  document.getElementById('firstName').value = '';
+  document.querySelector('#firstName').classList.remove('is-invalid', 'is-valid');
+  document.getElementById('patronymic').value = '';
+  document.querySelector('#patronymic').classList.remove('is-invalid', 'is-valid');
+  document.getElementById('email').value = '';
+  document.querySelector('#email').classList.remove('is-invalid', 'is-valid');
+  document.getElementById('phone').value = '';
+  document.querySelector('#phone').classList.remove('is-invalid', 'is-valid');
+  document.getElementById('password').value = '';
+  document.querySelector('#password').classList.remove('is-invalid', 'is-valid');
+
+}
