@@ -51,11 +51,11 @@ def add_franchise(id, city):
 # add_franchise("Набережные Челны")
 
 def get_franchises_and_franchiser():
-    query = session.query(Franchises, Users).join(Users, Franchises.id == Users.franchise_id).filter(Users.role == "franchiser").all()
+    query = session.query(Franchises, Users).join(Users, Franchises.id == Users.franchise_id).filter(Users.role == "франчайзер").all()
     return query
 
-# for i in get_franchises_and_franchiser():
-#     print(i.Users.role)
+for i in get_franchises_and_franchiser():
+    print(i.Users.role)
 
 def delete_franchise(id):
     franchise = session.query(Franchises).filter_by(id=id).first()

@@ -133,7 +133,7 @@ function validatePassword() {
       'submit',
       function (event) {
         if (
-          !form.checkValidity() ||
+          // !form.checkValidity() ||
           !validateCity() ||
           !validateFirstName() ||
           !validateLastName() ||
@@ -170,3 +170,5 @@ function clearInput() {
   document.querySelector('#password').classList.remove('is-invalid', 'is-valid');
 
 }
+
+

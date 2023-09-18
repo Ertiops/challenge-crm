@@ -43,7 +43,7 @@ def login_su():
             if user:
                 if check_password_hash(user.password_hash, password):
                     login_user(user)
-                    if role == ('superuser' or'franchiser' or 'employee' or 'operator'):
+                    if role == ('администратор' or 'франчайзер' or 'работник' or 'оператор'):
                         return redirect(url_for('admin.statistics'))
                     else:
                         abort(401)
@@ -75,7 +75,7 @@ def login_owner():
             if user:
                 if check_password_hash(user.password_hash, password):
                     login_user(user)
-                    if role == 'owner':
+                    if role == 'владелец':
                         return redirect(url_for('admin.statistics'))
                     else:
                         abort(401)

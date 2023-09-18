@@ -17,12 +17,12 @@
         <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-scrollable">
                 <div class="modal-content">
-                    <form class="needs-validation" method="post" id="form" novalidate></form>
                         <div class="modal-header">
                             <h5 class="modal-title" id="staticBackdropLabel">Регистрация Франшизы</h5>
                             <button type="button" class="btn-close" name="cancel" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body">                                      
+                        </div>                       
+                        <div class="modal-body">
+                        <form class="needs-validation" method="post" novalidate>                                                   
                             {% for cat, msg in get_flashed_messages(True) %}                                       
                             <div class="form-label-group">
                                 <div class="alert alert-{{cat}} alert-dismissible fade show" role="alert">
@@ -31,7 +31,7 @@
                                 </div>
                             </div>                                      
                             {% endfor %} 
-                            </br>
+                            </br>                            
                             <div class="form-label-group">                                        
                                 <input type="text" id="city" name="city" class="form-control"  placeholder="City" autocomplete="off" required>
                                 <label for="city">Город</label>
@@ -66,14 +66,14 @@
                                 <input type="password" id="password" name="password" class="form-control" placeholder="Password" required>
                                 <label for="password">Пароль</label>
                                 <div class="invalid-feedback">Заполните это поле</div>                                        
-                            </div>                       
+                            </div>                     
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" name="cancel" data-bs-dismiss="modal">Close</button>
-                            <button type="submit" id="submit" class="btn btn-primary" form="form"name="submit">Зарегистрировать</button>
-                        </div>
-                    </form>
-                </div>
+                            <button type="submit" class="btn btn-primary" name="submit">Зарегистрировать</button>
+                        </div> 
+                    </form>                  
+                </div>           
             </div>
         </div>
 
@@ -92,7 +92,7 @@
                 <tbody>
                     {% for franchise in franchises %}
                     <tr>
-                        <th scope="row">1</th>
+                        <th scope="row">{{loop.index}}</th>
                         <td>{{franchise.Franchises.city}}</td>
                         <td>{{franchise.Users.last_name}} {{franchise.Users.first_name[0]}}. | {{franchise.Users.phone}} | {{franchise.Users.email}}</td>
                         <td>
