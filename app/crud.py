@@ -54,8 +54,11 @@ def get_franchises_and_franchiser():
     query = session.query(Franchises, Users).join(Users, Franchises.id == Users.franchise_id).filter(Users.role == "франчайзер").all()
     return query
 
-for i in get_franchises_and_franchiser():
-    print(i.Users.role)
+def get_franchise_and_franchiser_by_id(franchise_id):
+    query = session.query(Franchises, Users).join(Users, Franchises.id == Users.franchise_id).filter(Franchises.id == franchise_id).filter(Users.role == "франчайзер").first()
+    return query
+
+# print(get_franchise_and_franchiser_by_id("db2da6b8-c2db-4d2f-98bc-3bc12582d795"))   
 
 def delete_franchise(id):
     franchise = session.query(Franchises).filter_by(id=id).first()
