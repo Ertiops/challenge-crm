@@ -23,9 +23,9 @@
                             <button type="button" class="btn-close" name="cancel" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>                       
                         <div class="modal-body">
-                        <form class="needs-validation" method="post" novalidate>                                                   
+                        <form class="needs-validation" method="post" id="form" novalidate>                                                   
                             {% for cat, msg in get_flashed_messages(True) %}                                       
-                            <div class="form-label-group">
+                            <div class="form-label-group" id="flashMessage">
                                 <div class="alert alert-{{cat}} alert-dismissible fade show" role="alert">
                                     {{ msg }}    
                                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>                        
@@ -108,8 +108,13 @@
             </table>
         </div>
         {% elif not franchises %}
-        <div class="d-flex align-items-center justify-content-center vh-100">
-            <h3 class="fs-5">Нет активных франшиз</h3>
+        <div class="container">
+            <div class="row justify-content-center align-items-center" style="min-height: 50vh; max-height: 65vh;">
+                <!-- The above style sets a minimum height to occupy the full viewport height -->
+                <div class="col-md-6 text-center fs-5">
+                    <h3>Нет активных франшиз</h3>
+                </div>
+            </div>
         </div>
         {% endif %}
     </div>    
@@ -117,8 +122,6 @@
 </br>
 
 <script src="./static/franchises.js"></script>
-
-
 
 
 {% endblock %}

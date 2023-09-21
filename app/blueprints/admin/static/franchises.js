@@ -146,6 +146,11 @@ function validatePassword() {
           event.stopPropagation();
         } else {
           form.classList.add('was-validated');
+          $('#form').on('submit', function(e){
+            $('#staticBackdrop').modal('show');
+            e.preventDefault();
+          });
+
         }
       },
       false
@@ -155,20 +160,37 @@ function validatePassword() {
 
 function clearInput() {
   document.getElementById('city').value = '';
-  document.querySelector('#city').classList.remove('is-invalid', 'is-valid');
+  document.querySelector('#city').classList.remove('is-invalid', 'is-valid', 'was-validated');
   document.getElementById('lastName').value = '';
-  document.querySelector('#lastName').classList.remove('is-invalid', 'is-valid');
+  document.querySelector('#lastName').classList.remove('is-invalid', 'is-valid', 'was-validated');
   document.getElementById('firstName').value = '';
-  document.querySelector('#firstName').classList.remove('is-invalid', 'is-valid');
+  document.querySelector('#firstName').classList.remove('is-invalid', 'is-valid', 'was-validated');
   document.getElementById('patronymic').value = '';
-  document.querySelector('#patronymic').classList.remove('is-invalid', 'is-valid');
+  document.querySelector('#patronymic').classList.remove('is-invalid', 'is-valid', 'was-validated');
   document.getElementById('email').value = '';
-  document.querySelector('#email').classList.remove('is-invalid', 'is-valid');
+  document.querySelector('#email').classList.remove('is-invalid', 'is-valid', 'was-validated');
   document.getElementById('phone').value = '';
-  document.querySelector('#phone').classList.remove('is-invalid', 'is-valid');
+  document.querySelector('#phone').classList.remove('is-invalid', 'is-valid', 'was-validated');
   document.getElementById('password').value = '';
-  document.querySelector('#password').classList.remove('is-invalid', 'is-valid');
+  document.querySelector('#password').classList.remove('is-invalid', 'is-valid', 'was-validated');
+  flashMessage = document.getElementById("flashMessage");
+  if (flashMessage) {
+    // Remove the flashed message element from the DOM
+    flashMessage.parentNode.removeChild(flashMessage);
+  }
 
 }
 
 
+// $(document).ready(function() {
+//   var messages = "{{ get_flashed_messages() }}";
+//   if (typeof messages != 'undefined' && messages != '[]') {
+//       $("#staticBackdrop").modal("show");
+//   };
+// });
+
+$(document).ready(function() {
+  if ($("#flashMessage *").length > 0){
+    $("#staticBackdrop").modal("show");
+  }
+});

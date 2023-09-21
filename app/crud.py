@@ -86,7 +86,7 @@ def add_user(first_name, last_name, patronymic, email, phone, password, role, fr
     session.commit()
 
 def check_user(email, password):
-    # returns True or False
+    """returns True or False whether email in db and returns None otherwise"""
     query = session.query(Users).filter_by(email=email).first()
     if query != None:
         result = query.check_password(password)
@@ -96,7 +96,23 @@ def check_user(email, password):
     
 def get_user(email):
     query = session.query(Users).filter_by(email=email).first()
-    return query    
+    return query 
+
+def is_email_unique(email):
+    """returns False if email is in database, otherwise returns True"""
+    query = session.query(Users).filter_by(email=email).first()   
+    if query != None:
+        return False
+    else:
+        return True
+    
+def is_phone_unique(phone):
+    """returns False if phone is in database, otherwise returns True"""
+    query = session.query(Users).filter_by(phone=phone).first()   
+    if query != None:
+        return False
+    else:
+        return True
 
 # add_user('Илья', 'Томин', 'Сергеевич', 'straxisrule@gmail.com', '89534087334', '12345', 'franchiser', '161aa0f3-acb9-4311-b4d8-7e5a4998cc94')
 
