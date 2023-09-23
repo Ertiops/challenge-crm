@@ -1,4 +1,4 @@
-from sqlalchemy import create_engine, select
+from sqlalchemy import create_engine, select, and_
 from sqlalchemy.orm import Session
 from config import DB_USER, DB_PASS, DB_HOST, DB_PORT, DB_NAME
 from models.models import Owners, Users, Franchises
@@ -60,6 +60,16 @@ def get_franchise_and_franchiser_by_id(franchise_id):
 
 # print(get_franchise_and_franchiser_by_id("db2da6b8-c2db-4d2f-98bc-3bc12582d795"))   
 
+def update_franchise(id, city):
+    """updates data for franchise in Franchises table"""
+    query = session.query(Franchises).filter_by(id=id).first()
+    if query:
+        query.city = city
+        session.commit()
+        return True
+    else:
+        return False
+
 def delete_franchise(id):
     franchise = session.query(Franchises).filter_by(id=id).first()
     session.delete(franchise)
@@ -71,8 +81,9 @@ def delete_franchise(id):
 
 """USER TABLE CRUD OPERATIONS"""
 
-def add_user(first_name, last_name, patronymic, email, phone, password, role, franchise_id):
+def add_user(id, first_name, last_name, patronymic, email, phone, password, role, franchise_id):
     user = Users(
+        id=id,
         first_name=first_name,
         last_name=last_name,
         patronymic=patronymic,
@@ -95,8 +106,40 @@ def check_user(email, password):
         return None
     
 def get_user(email):
+    """returns query row from Users table by email"""
     query = session.query(Users).filter_by(email=email).first()
     return query 
+
+def update_franchiser(id, first_name, last_name, patronymic, email, phone):
+    """updates data for franchiser in Users table"""
+    query = session.query(Users).filter_by(role="франчайзер").filter_by(id=id).first()
+    if query:
+        query.first_name = first_name
+        query.last_name = last_name
+        query.patronymic = patronymic
+        query.email = email
+        query.phone = phone
+        session.commit()
+        return True
+    else:
+        return False
+    
+
+def is_email_unique_except_current(id, email):
+    query = session.query(Users).filter(and_(Users.email == email, Users.id != id)).first()
+    if query:
+        return False
+    else:
+        return True
+    
+
+def is_phone_unique_except_current(id, phone):
+    query = session.query(Users).filter(and_(Users.phone == phone, Users.id != id)).first()
+    if query:
+        return False
+    else:
+        return True
+
 
 def is_email_unique(email):
     """returns False if email is in database, otherwise returns True"""

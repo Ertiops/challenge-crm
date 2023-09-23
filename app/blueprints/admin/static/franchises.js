@@ -173,6 +173,9 @@ function clearInput() {
   document.querySelector('#phone').classList.remove('is-invalid', 'is-valid', 'was-validated');
   document.getElementById('password').value = '';
   document.querySelector('#password').classList.remove('is-invalid', 'is-valid', 'was-validated');
+
+
+
   flashMessage = document.getElementById("flashMessage");
   if (flashMessage) {
     // Remove the flashed message element from the DOM
@@ -181,13 +184,6 @@ function clearInput() {
 
 }
 
-
-// $(document).ready(function() {
-//   var messages = "{{ get_flashed_messages() }}";
-//   if (typeof messages != 'undefined' && messages != '[]') {
-//       $("#staticBackdrop").modal("show");
-//   };
-// });
 
 $(document).ready(function() {
   if ($("#flashMessage *").length > 0){

@@ -1,5 +1,5 @@
 from flask_login import login_user, LoginManager, login_required, logout_user, current_user
-from flask import Flask, render_template, request, redirect, url_for, flash, abort
+from flask import Flask, render_template, request, redirect, url_for, flash, abort, session
 from werkzeug.security import check_password_hash
 import crud
 from models.models import Users, Owners
@@ -25,6 +25,8 @@ def load_user(user_id):
 
 
 app.register_blueprint(admin, url_prefix="/admin")
+
+
 
 @app.route("/", methods=['GET', 'POST'])
 def home():

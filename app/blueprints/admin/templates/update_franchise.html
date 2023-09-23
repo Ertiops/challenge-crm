@@ -62,7 +62,7 @@
                     </div> -->
                     <div class="form-label-group d-flex justify-content-end">
                         <button type="submit" class="btn btn-color-1 m-2" name="submit" value="update">Изменить</button>   
-                        <button type="submit" class="btn btn-color-2 m-2" name="submit" value="delete">Удалить</button>       
+                        <button type="button" class="btn btn-color-2 m-2" name="submit" value="pre-delete" data-bs-toggle="modal" data-bs-target="#staticBackdrop">Удалить</button>       
                     </div>                      
                 </form>
             </div>                  
@@ -70,6 +70,33 @@
     </div>
 </div>
 
+
+<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable">
+        <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="staticBackdropLabel">Удаление франшизы</h5>
+                    <button type="button" class="btn-close" name="cancel" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>                       
+                <div class="modal-body">
+                <form class="needs-validation" method="post" id="form2" novalidate>                                                    
+                    <p>Введите пароль, чтобы подтвердить удаление франшизы, 
+                        связанных с ней сотрудников, 
+                        данные о продажах и иную информацию</p>                                                                       
+                    <div class="form-label-group">
+                        <input type="password" id="password" name="password" class="form-control" placeholder="Password" required>
+                        <label for="password">Пароль</label>
+                        <div class="invalid-feedback">Заполните это поле</div>                                        
+                    </div>                     
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-color-1" name="cancel" data-bs-dismiss="modal">Отменить</button>
+                    <button type="submit" class="btn btn-color-2 m-2" name="submit" value="delete">Удалить</button>
+                </div> 
+            </form>                  
+        </div>           
+    </div>
+</div>
 
 <script src="./static/update_franchise.js"></script>
 

@@ -4,7 +4,6 @@ document.querySelector('#lastName').addEventListener('blur', validateLastName);
 document.querySelector('#patronymic').addEventListener('blur', validatePatronymic);
 document.querySelector('#email').addEventListener('blur', validateEmail);
 document.querySelector('#phone').addEventListener('blur', validatePhone);
-document.querySelector('#password').addEventListener('blur', validatePassword);
 
 const reSpaces = /^\S*$/;
 
@@ -107,21 +106,6 @@ function validatePhone(e) {
   }
 }
 
-function validatePassword() {
-  const password = document.querySelector('#password');
-  const re = /(.)/;
-  if (re.test(password.value) && reSpaces.test(password.value)) {
-    password.classList.remove('is-invalid');
-    password.classList.add('is-valid');
-
-    return true;
-  } else {
-    password.classList.add('is-invalid');
-    password.classList.remove('is-valid');
-
-    return false;
-  }
-}
 
 (function () {
   const forms = document.querySelectorAll('.needs-validation');
@@ -137,8 +121,7 @@ function validatePassword() {
           !validateLastName() ||
           !validatePatronymic() ||
           !validateEmail() ||
-          !validatePhone() ||
-          !validatePassword()
+          !validatePhone()
         ) {
           event.preventDefault();
           event.stopPropagation();
@@ -150,6 +133,31 @@ function validatePassword() {
     );
   }
 })();
+
+
+
+
+
+// $(document).ready(function() {
+//     $("#passwordForm").submit(function(event) {
+//         event.preventDefault();
+//         var password = $("#password").val();
+//         $.ajax({
+//             type: "POST",
+//             url: "/validate_password",
+//             data: JSON.stringify({ "password": password }),
+//             contentType: "application/json",
+//             success: function(response) {
+//                 if (response.is_valid) {
+//                     $("#validationResult").text("Password is valid.");
+//                 } else {
+//                     $("#validationResult").text("Password is invalid.");
+//                 }
+//             }
+//         });
+//     });
+// });
+
 
 
 

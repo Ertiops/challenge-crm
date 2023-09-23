@@ -41,7 +41,7 @@ class Franchises(Base):
 class Users(Base, UserMixin):
     __tablename__ = 'users'
 
-    id = Column(UUID(as_uuid=True), default=uuid.uuid4(), primary_key=True)
+    id = Column(UUID(as_uuid=True), primary_key=True)
     first_name = Column(String(30), nullable=False)
     last_name = Column(String(30), nullable=False)
     patronymic = Column(String(30))
