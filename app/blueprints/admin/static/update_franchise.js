@@ -4,6 +4,8 @@ document.querySelector('#lastName').addEventListener('blur', validateLastName);
 document.querySelector('#patronymic').addEventListener('blur', validatePatronymic);
 document.querySelector('#email').addEventListener('blur', validateEmail);
 document.querySelector('#phone').addEventListener('blur', validatePhone);
+document.querySelector('#password').addEventListener('blur', validatePasswordHash);
+document.querySelectorAll("[name='cancel']").forEach((el) => {el.addEventListener('blur', clearInput)});
 
 const reSpaces = /^\S*$/;
 
@@ -96,19 +98,17 @@ function validatePhone(e) {
   if (reSpaces.test(phone.value) && re.test(phone.value)) {
     phone.classList.remove('is-invalid');
     phone.classList.add('is-valid');
-
     return true;
   } else {
     phone.classList.add('is-invalid');
     phone.classList.remove('is-valid');
-
     return false;
   }
 }
 
 
 (function () {
-  const forms = document.querySelectorAll('.needs-validation');
+  const forms = document.querySelectorAll('.needs-validation-update');
 
   for (let form of forms) {
     form.addEventListener(
@@ -135,28 +135,98 @@ function validatePhone(e) {
 })();
 
 
+(function needsPasswordValidation() {
+  const form = document.querySelector('.needs-password-validation');
+
+  form.addEventListener(
+    'submit',
+    function (event) {
+      if (
+        // !form.checkValidity() ||
+        !validatePasswordHash()
+      ) {
+        event.preventDefault();
+        event.stopPropagation();
+      } else  {
+        form.classList.add('was-validated');
+      }
+    },
+    false
+  );
+
+})();
 
 
 
-// $(document).ready(function() {
-//     $("#passwordForm").submit(function(event) {
-//         event.preventDefault();
-//         var password = $("#password").val();
-//         $.ajax({
-//             type: "POST",
-//             url: "/validate_password",
-//             data: JSON.stringify({ "password": password }),
-//             contentType: "application/json",
-//             success: function(response) {
-//                 if (response.is_valid) {
-//                     $("#validationResult").text("Password is valid.");
-//                 } else {
-//                     $("#validationResult").text("Password is invalid.");
-//                 }
-//             }
-//         });
-//     });
+function validatePasswordHash(e) {
+  const passwordField = document.querySelector('#password');
+  const password = passwordField.value;
+  const data = { "password": password };
+ 
+  fetch("/admin/validate_password", {
+    method: "POST",
+    headers: {
+        "Content-Type": "application/json",
+    },
+    body: JSON.stringify(data),
+  })
+
+  .then(response => response.json())
+  .then(data => {
+    if (data.is_valid) {
+        passwordField.classList.add('is-valid');
+        passwordField.classList.remove('is-invalid');
+        return true;
+
+    } else {
+        passwordField.classList.add('is-invalid');
+        passwordField.classList.remove('is-valid');
+        return false;
+    }
+  })
+
+};
+
+// document.getElementById("passwordForm").addEventListener("submit", function (event) {
+//   const passwordField = document.querySelector('#password');
+//   const password = document.getElementById("password").value;
+//   const data = { "password": password };
+//   const form = document.querySelector('#passwordForm');
+
+//   // Add Bootstrap's was-validated class for form validation
+
+//   fetch("/admin/validate_password", {
+//       method: "POST",
+//       headers: {
+//           "Content-Type": "application/json",
+//       },
+//       body: JSON.stringify(data),
+//   })
+//   .then(response => response.json())
+//   .then(data => {
+//       if (data.is_valid) {
+//           // Close the modal
+//           passwordField.classList.remove('is-invalid');
+//           passwordField.classList.add('is-valid');
+//           form.classList.add('was-validated');
+//       } else {
+//           // Handle validation error
+//           event.preventDefault();
+//           event.stopPropagation();
+//           passwordField.classList.add('is-invalid');
+//       }
+//   })
+//   .catch(error => {
+//       console.error("Error:", error);
+//   });
 // });
+
+
+
+function clearInput() {
+  document.getElementById('password').value = '';
+  document.querySelector('#password').classList.remove('is-invalid', 'is-valid', 'was-validated');
+}
 
 
 

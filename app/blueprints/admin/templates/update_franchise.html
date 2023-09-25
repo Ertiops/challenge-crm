@@ -15,7 +15,7 @@
     <div class="row my-1">
         <div class="card bg-white shadow-sm rounded">
             <div class="card-body">
-                <form class="needs-validation form-signin" method="post" novalidate>                                                   
+                <form class="needs-validation needs-validation-update form-signin" method="post" id="updateFranchise" novalidate>                                                   
                     {% for cat, msg in get_flashed_messages(True) %}                                       
                     <div class="form-label-group">
                         <div class="alert alert-{{cat}} alert-dismissible fade show" role="alert">
@@ -23,8 +23,7 @@
                             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>                        
                         </div>
                     </div>                                      
-                    {% endfor %} 
-                    </br>                            
+                    {% endfor %}                           
                     <div class="form-label-group">                                        
                         <input type="text" id="city" name="city" class="form-control"  placeholder="City" autocomplete="off" value="{{franchise.Franchises.city}}" required>
                         <label for="city">Город</label>
@@ -55,14 +54,9 @@
                         <label for="phone">Номер телефона</label>
                         <div id="phone-validation" class="invalid-feedback">Введите номер по типу: 89134785678</div>                                       
                     </div>                                             
-                    <!-- <div class="form-label-group">
-                        <input type="password" id="password" name="password" class="form-control" placeholder="Password" value="{{franchise.Users.password_hash}}" required>
-                        <label for="password">Пароль</label>
-                        <div class="invalid-feedback">Заполните это поле</div>                                        
-                    </div> -->
                     <div class="form-label-group d-flex justify-content-end">
                         <button type="submit" class="btn btn-color-1 m-2" name="submit" value="update">Изменить</button>   
-                        <button type="button" class="btn btn-color-2 m-2" name="submit" value="pre-delete" data-bs-toggle="modal" data-bs-target="#staticBackdrop">Удалить</button>       
+                        <button type="button" class="btn btn-color-2 m-2" value="pre-delete" data-bs-toggle="modal" data-bs-target="#staticBackdrop">Удалить</button>       
                     </div>                      
                 </form>
             </div>                  
@@ -79,14 +73,14 @@
                     <button type="button" class="btn-close" name="cancel" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>                       
                 <div class="modal-body">
-                <form class="needs-validation" method="post" id="form2" novalidate>                                                    
+                <form  method="post" class="needs-validation needs-password-validation" id="passwordForm" novalidate>                                                    
                     <p>Введите пароль, чтобы подтвердить удаление франшизы, 
                         связанных с ней сотрудников, 
                         данные о продажах и иную информацию</p>                                                                       
                     <div class="form-label-group">
                         <input type="password" id="password" name="password" class="form-control" placeholder="Password" required>
                         <label for="password">Пароль</label>
-                        <div class="invalid-feedback">Заполните это поле</div>                                        
+                        <div class="invalid-feedback">Пароль неверный</div>                                       
                     </div>                     
                 </div>
                 <div class="modal-footer">

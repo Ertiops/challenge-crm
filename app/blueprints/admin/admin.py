@@ -2,6 +2,7 @@ from flask import Blueprint, render_template, redirect, request, url_for, flash,
 import uuid0
 import crud
 from flask_login import current_user, login_required
+from werkzeug.security import check_password_hash
 
 
 admin = Blueprint("admin", __name__, template_folder="templates", static_folder='static')
@@ -49,7 +50,6 @@ def update_franchise():
     franchise = crud.get_franchise_and_franchiser_by_id(franchise_id)
     # old_email = franchise.Users.email
     # old_phone = franchise.Users.phone
-    print(current_user.password_hash)
 
     if request.method == 'POST':
         if request.form['submit'] == 'update':
@@ -76,7 +76,6 @@ def update_franchise():
             
 
         elif request.form['submit'] == 'delete':
-
             print("Удалить")            
             flash("Сися пися", category="danger")
             return redirect(url_for('admin.update_franchise', franchise_id=franchise_id))        
@@ -85,7 +84,12 @@ def update_franchise():
     return render_template('update_franchise.html', title='Франшизы', franchise=franchise)
 
 
-
+@admin.route("/validate_password", methods=["POST"])
+def validate():
+    data = request.get_json()
+    provided_password = data.get("password")
+    is_valid = check_password_hash(current_user.password_hash, provided_password)
+    return jsonify({"is_valid": is_valid})
 
 # добавка в бд бронирований
 
