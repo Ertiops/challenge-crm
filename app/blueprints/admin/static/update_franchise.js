@@ -106,27 +106,73 @@ function validatePhone(e) {
   }
 }
 
+// (function () {
+// const forms = document.querySelectorAll('.needs-validation');
+
+// for (let form of forms) {
+//   form.addEventListener('submit', function(event) {
+//     event.preventDefault(); // Prevent the form from submitting initially
+
+//     // Get the form's id attribute
+//     const formId = form.getAttribute('id');
+
+//     // Add your conditional logic based on the form id here
+//     if (formId === 'someFormId') {
+//       // Perform actions specific to the form with id "someFormId"
+//       // For example, validate the form fields, submit AJAX request, etc.
+//     } else if (formId === 'anotherFormId') {
+//       // Perform actions specific to the form with id "anotherFormId"
+//     }
+
+//     // You can add more conditions as needed for different forms
+
+//     // After your conditional logic, you can optionally submit the form
+//     // form.submit();
+//   });
+// })();
+
+
+
+
+
+
+
+
 
 (function () {
-  const forms = document.querySelectorAll('.needs-validation-update');
+  const forms = document.querySelectorAll('.needs-validation');
 
   for (let form of forms) {
     form.addEventListener(
       'submit',
-      function (event) {
-        if (
-          // !form.checkValidity() ||
-          !validateCity() ||
-          !validateFirstName() ||
-          !validateLastName() ||
-          !validatePatronymic() ||
-          !validateEmail() ||
-          !validatePhone()
-        ) {
-          event.preventDefault();
-          event.stopPropagation();
-        } else {
-          form.classList.add('was-validated');
+      function (event) { 
+        const formId = form.getAttribute('id');
+        if (formId === 'updateFranchise' ) {
+          if (
+            // !form.checkValidity() ||
+            !validateCity() ||
+            !validateFirstName() ||
+            !validateLastName() ||
+            !validatePatronymic() ||
+            !validateEmail() ||
+            !validatePhone()
+          ) {
+            event.preventDefault();
+            event.stopPropagation();
+          } else {
+            form.classList.add('was-validated');
+          }
+        }
+        else if (formId === 'passwordForm') {
+          if (
+            // !form.checkValidity() ||
+            !validatePasswordHash()
+          ) {
+            event.preventDefault();
+            event.stopPropagation();
+          } else {
+            form.classList.add('was-validated');
+          }
         }
       },
       false
@@ -135,26 +181,26 @@ function validatePhone(e) {
 })();
 
 
-(function needsPasswordValidation() {
-  const form = document.querySelector('.needs-password-validation');
+// (function needsPasswordValidation() {
+//   const form = document.querySelector('.needs-password-validation');
 
-  form.addEventListener(
-    'submit',
-    function (event) {
-      if (
-        // !form.checkValidity() ||
-        !validatePasswordHash()
-      ) {
-        event.preventDefault();
-        event.stopPropagation();
-      } else  {
-        form.classList.add('was-validated');
-      }
-    },
-    false
-  );
+//   form.addEventListener(
+//     'submit',
+//     function (event) {
+//       if (
+//         // !form.checkValidity() ||
+//         !validatePasswordHash()
+//       ) {
+//         event.preventDefault();
+//         event.stopPropagation();
+//       } else  {
+//         form.classList.add('was-validated');
+//       }
+//     },
+//     false
+//   );
 
-})();
+// })();
 
 
 

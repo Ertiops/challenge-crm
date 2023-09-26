@@ -75,7 +75,7 @@ def update_franchise():
                 return redirect(url_for('admin.update_franchise', franchise_id=franchise_id))                             
             
 
-        elif request.form['submit'] == 'delete':
+        elif request.get_json().get("action") == 'delete':
             print("Удалить")            
             flash("Сися пися", category="danger")
             return redirect(url_for('admin.update_franchise', franchise_id=franchise_id))        

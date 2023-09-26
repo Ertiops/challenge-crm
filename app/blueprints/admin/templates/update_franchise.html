@@ -15,7 +15,7 @@
     <div class="row my-1">
         <div class="card bg-white shadow-sm rounded">
             <div class="card-body">
-                <form class="needs-validation needs-validation-update form-signin" method="post" id="updateFranchise" novalidate>                                                   
+                <form class="needs-validation form-signin" method="post" id="updateFranchise" novalidate>                                                   
                     {% for cat, msg in get_flashed_messages(True) %}                                       
                     <div class="form-label-group">
                         <div class="alert alert-{{cat}} alert-dismissible fade show" role="alert">
@@ -73,7 +73,7 @@
                     <button type="button" class="btn-close" name="cancel" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>                       
                 <div class="modal-body">
-                <form  method="post" class="needs-validation needs-password-validation" id="passwordForm" novalidate>                                                    
+                <form  method="post" class="needs-validation" id="passwordForm" novalidate>                                                    
                     <p>Введите пароль, чтобы подтвердить удаление франшизы, 
                         связанных с ней сотрудников, 
                         данные о продажах и иную информацию</p>                                                                       
