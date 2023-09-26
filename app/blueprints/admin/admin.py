@@ -65,31 +65,29 @@ def update_franchise():
                 result_franchiser = crud.update_franchiser(franchise_id, first_name, last_name, patronymic, email, phone)
                 result_franchise = crud.update_franchise(franchise_id, city)
                 if result_franchiser and result_franchise:
-                    flash("Данные обновлены успешно", category="success") 
+                    flash("Данные обновлены успешно", category="update success") 
                     return redirect(url_for('admin.update_franchise', franchise_id=franchise_id))
             elif not unique_email:
-                flash("Данный email уже зарегистрирован", category="danger") 
+                flash("Данный email уже зарегистрирован", category="update danger") 
                 return redirect(url_for('admin.update_franchise', franchise_id=franchise_id))
             elif not unique_phone:
-                flash("Данный номер уже зарегистрирован", category="danger") 
+                flash("Данный номер уже зарегистрирован", category="update danger") 
                 return redirect(url_for('admin.update_franchise', franchise_id=franchise_id))                             
             
 
-        elif request.get_json().get("action") == 'delete':
-            print("Удалить")            
-            flash("Сися пися", category="danger")
-            return redirect(url_for('admin.update_franchise', franchise_id=franchise_id))        
+        elif request.form['submit'] == 'delete':
+            provided_password = request.form['password'] 
+            is_valid = check_password_hash(current_user.password_hash, provided_password)
+            if is_valid:
+               crud.delete_franchise(franchise_id)
+               return redirect(url_for('admin.franchises'))
+            else:
+                flash("Пароль неверный", category="delete danger")
+                return redirect(url_for('admin.update_franchise', franchise_id=franchise_id))        
     
 
     return render_template('update_franchise.html', title='Франшизы', franchise=franchise)
 
-
-@admin.route("/validate_password", methods=["POST"])
-def validate():
-    data = request.get_json()
-    provided_password = data.get("password")
-    is_valid = check_password_hash(current_user.password_hash, provided_password)
-    return jsonify({"is_valid": is_valid})
 
 # добавка в бд бронирований
 

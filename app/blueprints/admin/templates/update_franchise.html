@@ -16,14 +16,17 @@
         <div class="card bg-white shadow-sm rounded">
             <div class="card-body">
                 <form class="needs-validation form-signin" method="post" id="updateFranchise" novalidate>                                                   
-                    {% for cat, msg in get_flashed_messages(True) %}                                       
-                    <div class="form-label-group">
-                        <div class="alert alert-{{cat}} alert-dismissible fade show" role="alert">
-                            {{ msg }}    
-                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>                        
-                        </div>
-                    </div>                                      
-                    {% endfor %}                           
+                    {% for cat, msg in get_flashed_messages(True) %}   
+                        {% set categories = cat.split() %}
+                        {% if categories[0] == "update" %}                                    
+                            <div class="form-label-group">
+                                <div class="alert alert-{{categories[1]}} alert-dismissible fade show" role="alert">
+                                    {{ msg }}    
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>                        
+                                </div>
+                            </div>
+                        {%endif%}                                      
+                    {% endfor %}                              
                     <div class="form-label-group">                                        
                         <input type="text" id="city" name="city" class="form-control"  placeholder="City" autocomplete="off" value="{{franchise.Franchises.city}}" required>
                         <label for="city">Город</label>
@@ -73,7 +76,18 @@
                     <button type="button" class="btn-close" name="cancel" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>                       
                 <div class="modal-body">
-                <form  method="post" class="needs-validation" id="passwordForm" novalidate>                                                    
+                <form  method="post" class="needs-validation" id="passwordForm" novalidate>
+                    {% for cat, msg in get_flashed_messages(True) %}   
+                        {% set categories = cat.split() %}
+                        {% if categories[0] == "delete" %}                                    
+                            <div class="form-label-group" id="flashMessage">
+                                <div class="alert alert-{{categories[1]}} alert-dismissible fade show" role="alert">
+                                    {{ msg }}    
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>                        
+                                </div>
+                            </div>
+                        {% endif %}                                      
+                    {% endfor %}                                                     
                     <p>Введите пароль, чтобы подтвердить удаление франшизы, 
                         связанных с ней сотрудников, 
                         данные о продажах и иную информацию</p>                                                                       

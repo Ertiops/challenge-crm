@@ -4,7 +4,6 @@ document.querySelector('#lastName').addEventListener('blur', validateLastName);
 document.querySelector('#patronymic').addEventListener('blur', validatePatronymic);
 document.querySelector('#email').addEventListener('blur', validateEmail);
 document.querySelector('#phone').addEventListener('blur', validatePhone);
-document.querySelector('#password').addEventListener('blur', validatePasswordHash);
 document.querySelectorAll("[name='cancel']").forEach((el) => {el.addEventListener('blur', clearInput)});
 
 const reSpaces = /^\S*$/;
@@ -106,37 +105,6 @@ function validatePhone(e) {
   }
 }
 
-// (function () {
-// const forms = document.querySelectorAll('.needs-validation');
-
-// for (let form of forms) {
-//   form.addEventListener('submit', function(event) {
-//     event.preventDefault(); // Prevent the form from submitting initially
-
-//     // Get the form's id attribute
-//     const formId = form.getAttribute('id');
-
-//     // Add your conditional logic based on the form id here
-//     if (formId === 'someFormId') {
-//       // Perform actions specific to the form with id "someFormId"
-//       // For example, validate the form fields, submit AJAX request, etc.
-//     } else if (formId === 'anotherFormId') {
-//       // Perform actions specific to the form with id "anotherFormId"
-//     }
-
-//     // You can add more conditions as needed for different forms
-
-//     // After your conditional logic, you can optionally submit the form
-//     // form.submit();
-//   });
-// })();
-
-
-
-
-
-
-
 
 
 (function () {
@@ -163,17 +131,6 @@ function validatePhone(e) {
             form.classList.add('was-validated');
           }
         }
-        else if (formId === 'passwordForm') {
-          if (
-            // !form.checkValidity() ||
-            !validatePasswordHash()
-          ) {
-            event.preventDefault();
-            event.stopPropagation();
-          } else {
-            form.classList.add('was-validated');
-          }
-        }
       },
       false
     );
@@ -181,98 +138,24 @@ function validatePhone(e) {
 })();
 
 
-// (function needsPasswordValidation() {
-//   const form = document.querySelector('.needs-password-validation');
-
-//   form.addEventListener(
-//     'submit',
-//     function (event) {
-//       if (
-//         // !form.checkValidity() ||
-//         !validatePasswordHash()
-//       ) {
-//         event.preventDefault();
-//         event.stopPropagation();
-//       } else  {
-//         form.classList.add('was-validated');
-//       }
-//     },
-//     false
-//   );
-
-// })();
-
-
-
-function validatePasswordHash(e) {
-  const passwordField = document.querySelector('#password');
-  const password = passwordField.value;
-  const data = { "password": password };
- 
-  fetch("/admin/validate_password", {
-    method: "POST",
-    headers: {
-        "Content-Type": "application/json",
-    },
-    body: JSON.stringify(data),
-  })
-
-  .then(response => response.json())
-  .then(data => {
-    if (data.is_valid) {
-        passwordField.classList.add('is-valid');
-        passwordField.classList.remove('is-invalid');
-        return true;
-
-    } else {
-        passwordField.classList.add('is-invalid');
-        passwordField.classList.remove('is-valid');
-        return false;
-    }
-  })
-
-};
-
-// document.getElementById("passwordForm").addEventListener("submit", function (event) {
-//   const passwordField = document.querySelector('#password');
-//   const password = document.getElementById("password").value;
-//   const data = { "password": password };
-//   const form = document.querySelector('#passwordForm');
-
-//   // Add Bootstrap's was-validated class for form validation
-
-//   fetch("/admin/validate_password", {
-//       method: "POST",
-//       headers: {
-//           "Content-Type": "application/json",
-//       },
-//       body: JSON.stringify(data),
-//   })
-//   .then(response => response.json())
-//   .then(data => {
-//       if (data.is_valid) {
-//           // Close the modal
-//           passwordField.classList.remove('is-invalid');
-//           passwordField.classList.add('is-valid');
-//           form.classList.add('was-validated');
-//       } else {
-//           // Handle validation error
-//           event.preventDefault();
-//           event.stopPropagation();
-//           passwordField.classList.add('is-invalid');
-//       }
-//   })
-//   .catch(error => {
-//       console.error("Error:", error);
-//   });
-// });
-
-
 
 function clearInput() {
   document.getElementById('password').value = '';
   document.querySelector('#password').classList.remove('is-invalid', 'is-valid', 'was-validated');
+
+  flashMessage = document.getElementById("flashMessage");
+  if (flashMessage) {
+    // Remove the flashed message element from the DOM
+    flashMessage.parentNode.removeChild(flashMessage);
+  }
+
 }
+
+$(document).ready(function() {
+  if ($("#flashMessage *").length > 0){
+    $("#staticBackdrop").modal("show");
+  }
+});
 
 
 

@@ -174,8 +174,6 @@ function clearInput() {
   document.getElementById('password').value = '';
   document.querySelector('#password').classList.remove('is-invalid', 'is-valid', 'was-validated');
 
-
-
   flashMessage = document.getElementById("flashMessage");
   if (flashMessage) {
     // Remove the flashed message element from the DOM
