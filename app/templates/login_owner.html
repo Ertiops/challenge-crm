@@ -10,7 +10,7 @@
     <div class="text-center mb-4">
       <img class="mb-4" src="https://getbootstrap.com/docs/4.0/assets/brand/bootstrap-solid.svg" alt="" width="72" height="72">
       <h1 class="h3 mb-2 font-weight-normal">CRM-Вызов</h1>
-      <h2 class="h4 mb-3 font-weight-normal">(Для владельцев)</h2>
+      <h2 class="h4 mb-3 font-weight-normal">(Для учредителей)</h2>
     </div>
 
 {% for cat, msg in get_flashed_messages(True) %}
@@ -29,17 +29,13 @@
       <label for="email">Адрес электронной почты</label>
       <div id="email-validation" class="invalid-feedback">Введите корректный адрес электронной почты</div>
     </div>
-
     <div class="form-label-group">
       <input type="password" id="password" name="password" class="form-control" placeholder="Password" required>
       <label for="password">Пароль</label>
       <div class="invalid-feedback">Заполните это поле</div>
     </div>
-
-    <div class="checkbox mb-3">
-      <label>
-        <input type="checkbox" value="remember-me"> Запомнить меня
-      </label>
+    <div class="form-label-group d-flex justify-content-end"">
+      <a href="{{ url_for('login') }}" style="color: inherit;text-decoration: inherit;">Вход для сотрудников</a>
     </div>
     <div class="d-grid gap-2">
         <button class="btn btn-lg btn-primary btn-block" type="submit">Войти</button>

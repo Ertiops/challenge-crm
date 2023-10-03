@@ -48,9 +48,6 @@ def franchises():
 def update_franchise():
     franchise_id = request.args.get('franchise_id', None)
     franchise = crud.get_franchise_and_franchiser_by_id(franchise_id)
-    # old_email = franchise.Users.email
-    # old_phone = franchise.Users.phone
-
     if request.method == 'POST':
         if request.form['submit'] == 'update':
             email = request.form['email']
@@ -73,8 +70,6 @@ def update_franchise():
             elif not unique_phone:
                 flash("Данный номер уже зарегистрирован", category="update danger") 
                 return redirect(url_for('admin.update_franchise', franchise_id=franchise_id))                             
-            
-
         elif request.form['submit'] == 'delete':
             provided_password = request.form['password'] 
             is_valid = check_password_hash(current_user.password_hash, provided_password)
@@ -87,6 +82,18 @@ def update_franchise():
     
 
     return render_template('update_franchise.html', title='Франшизы', franchise=franchise)
+
+@admin.route("/employees", methods=['GET'])
+def employees():
+    franchises = crud.get_franchises_and_franchiser()
+        
+    return render_template('employees.html', title='Сотрудники', franchises=franchises)
+
+@admin.route("/employees/<franchise_id>", methods=['GET', 'POST'])
+def franchise_employees(franchise_id):
+        
+    return render_template('franchise_employees.html')
+
 
 
 # добавка в бд бронирований

@@ -1,0 +1,64 @@
+{% extends "base_admin.html" %}
+
+{% block content %}
+
+<link rel="stylesheet" href="{{url_for('.static', filename='franchises.css')}}" />
+
+{% if franchises %}
+<div class="container-fluid px-4">
+    <div class="row my-1">
+        <div class="d-flex flex-wrap justify-content-between">
+            <div class="p-1 mb-2">
+                <h3 class="fs-4">Управление сотрудниками</h3>
+            </div>
+        </div>
+    </div>
+
+<div class="col table-responsive">
+    <table class="table bg-white rounded shadow-sm  table-hover">
+        <thead>
+            <tr>
+                <th scope="col" width="50">#</th>
+                <th scope="col">Город</th>
+                <th scope="col">Актёры</th>
+                <th scope="col">Операторы</th>
+                <th scope="col">Администраторы</th>
+                <th scope="col">Руководство</th>
+                <th scope="col">Управление</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for franchise in franchises %}
+            <tr>
+                <th scope="row">{{loop.index}}</th>
+                <td>{{franchise.Franchises.city}}</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>
+                    <a href="{{url_for('admin.franchise_employees', franchise_id = franchise.Franchises.id)}}" class="btn btn-color-1 btn-sm">
+                        <i class="far fa-edit"></i>
+                         Изменить
+                    </a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% elif not franchises %}
+<div class="container">
+    <div class="row justify-content-center align-items-center" style="min-height: 50vh; max-height: 65vh;">
+        <!-- The above style sets a minimum height to occupy the full viewport height -->
+        <div class="col-md-6 text-center fs-5">
+            <h3>Нет активных франшиз</h3>
+        </div>
+    </div>
+</div>
+
+</div>
+
+{% endif %}
+
+{% endblock %}

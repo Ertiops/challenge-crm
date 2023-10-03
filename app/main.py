@@ -29,11 +29,7 @@ app.register_blueprint(admin, url_prefix="/admin")
 
 
 @app.route("/", methods=['GET', 'POST'])
-def home():
-    return render_template('index.html')
-
-@app.route("/superuser", methods=['GET', 'POST'])
-def login_su():
+def login():
     if current_user.is_authenticated:
         return redirect(url_for('admin.statistics')) 
     else:
@@ -54,16 +50,7 @@ def login_su():
 
     return render_template('login.html')
 
-
-@app.route("/logout", methods=['GET', 'POST'])
-@login_required
-def logout():
-    logout_user()
-    flash('You have been logged out')
-    return redirect(url_for('home'))
-
-
-@app.route("/owner", methods=['GET', 'POST'])
+@app.route("/login_owner", methods=['GET', 'POST'])
 def login_owner():
     
     if current_user.is_authenticated:
@@ -85,6 +72,17 @@ def login_owner():
                     flash("Неверный Email или пароль", category="danger")
 
     return render_template('login_owner.html')
+
+
+@app.route("/logout", methods=['GET', 'POST'])
+@login_required
+def logout():
+    logout_user()
+    flash('Вы вышли из системы', category="primary")
+    return redirect(url_for('login'))
+
+
+
 
 
 @app.route("/formfields", methods=['GET', 'POST'])
