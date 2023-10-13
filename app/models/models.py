@@ -3,7 +3,8 @@ from sqlalchemy import Column, Integer, String, TIMESTAMP, ForeignKey, UUID, Dat
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 import uuid
-import datetime
+from datetime import datetime
+import pytz
 from werkzeug.security import generate_password_hash, check_password_hash
 
 
@@ -32,6 +33,7 @@ class Franchises(Base):
     __tablename__ = 'franchises'
     id  = Column(UUID(as_uuid=True), primary_key=True)
     city = Column(String(50), nullable=False, primary_key=True)
+    created_at = Column(DateTime, nullable=False, default=datetime.now(pytz.timezone('Europe/Moscow')))
 
 
 
@@ -50,6 +52,7 @@ class Users(Base, UserMixin):
     password_hash = Column(String(150), nullable=False)
     role = Column(String(20), nullable=False)
     franchise_id = Column(UUID(as_uuid=True), ForeignKey("franchises.id", ondelete="CASCADE"), nullable=False)
+    created_at = Column(DateTime, nullable=False, default=datetime.now(pytz.timezone('Europe/Moscow')))
 
     franchises=relationship('Franchises')
 
@@ -70,7 +73,7 @@ class Reservations(Base):
     __tablename__ = 'reservations'
 
     reservation_id = Column(Integer, primary_key=True)
-    date_created = Column(DateTime, default=datetime.datetime.utcnow)
+    date_created = Column(DateTime, default=datetime.now(pytz.timezone('Europe/Moscow')))
     name = Column(String(60), nullable=False)
     phone = Column(String(30), nullable=False)
     mail = Column(String(30), nullable=False)

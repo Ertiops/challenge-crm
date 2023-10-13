@@ -2,7 +2,7 @@
 
 {% block content %}
 
-<link rel="stylesheet" href="{{url_for('.static', filename='franchises.css')}}" />
+<link rel="stylesheet" href="{{url_for('.static', filename='employees.css')}}" />
 
 
 <div class="container-fluid px-4">
@@ -11,6 +11,78 @@
             <div class="p-1 mb-2">
                 <h3 class="fs-4">Управление сотрудниками</h3>
             </div>
+            <div class="p-1 mb-2">
+                <a href="#" class="btn btn-color-1" data-bs-toggle="modal" data-bs-target="#staticBackdrop"><i class="fa fa-plus-circle"></i>  Добавить</a>
+            </div>           
+        </div>
+    </div>
+
+    <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-scrollable">
+            <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="staticBackdropLabel">Регистрация сотрудника</h5>
+                        <button type="button" class="btn-close" name="cancel" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>                       
+                    <div class="modal-body">
+                    <form class="needs-validation" method="post" id="form" novalidate>                                                   
+                        {% for cat, msg in get_flashed_messages(True) %}                                       
+                        <div class="form-label-group" id="flashMessage">
+                            <div class="alert alert-{{cat}} alert-dismissible fade show" role="alert">
+                                {{ msg }}    
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>                        
+                            </div>
+                        </div>                                      
+                        {% endfor %} 
+                        </br>
+                        <div class="form-label-group">
+                            <select id="role" name="role" class="form-control form-select"  placeholder="Role" autocomplete="off" required> 
+                                <option value="">Выберите роль</option>
+                                <option value="актёр">Актёр</option>
+                                <option value="администратор">Администратор</option>
+                                <option value="оператор">Оператор</option>
+                                <option value="директор">Директор</option>
+                                <option value="франчайзер">Франчайзер</option>  
+                            </select>
+                            <div id="role-validation" class="invalid-feedback">Выберите роль из списка</div>                                                                                         
+                        </div>
+                        <div class="form-label-group">                                        
+                            <input type="text" id="lastName" name="lastName" class="form-control"  placeholder="Last Name" autocomplete="off" required>
+                            <label for="lastName">Фамилия</label>
+                            <div id="lastname-validation" class="invalid-feedback">Введите корректную фамилию (кириллица без пробелов)</div>                                    
+                        </div>                                            
+                        <div class="form-label-group">                                        
+                            <input type="text" id="firstName" name="firstName" class="form-control"  placeholder="First Name" autocomplete="off" required>
+                            <label for="firstName">Имя</label>
+                            <div id="firstname-validation" class="invalid-feedback">Введите корректное имя (кириллица без пробелов)</div>                                    
+                        </div>                                           
+                        <div class="form-label-group">                                        
+                            <input type="text" id="patronymic" name="patronymic" class="form-control"  placeholder="Patronymic" autocomplete="off" required>
+                            <label for="patronymic">Отчество</label>
+                            <div id="patronymic-validation" class="invalid-feedback">Введите корректное имя (кириллица без пробелов)</div>                                    
+                        </div>                                            
+                        <div class="form-label-group">                                        
+                            <input type="email" id="email" name="email" class="form-control"  placeholder="Email address" autocomplete="off" required>
+                            <label for="email">Адрес электронной почты</label>
+                            <div id="email-validation" class="invalid-feedback">Введите корректный адрес электронной почты</div>                                       
+                        </div>                                        
+                        <div class="form-label-group">                                        
+                            <input type="tel" id="phone" name="phone" class="form-control"  placeholder="Phone number" autocomplete="off" pattern= required>
+                            <label for="phone">Номер телефона</label>
+                            <div id="phone-validation" class="invalid-feedback">Введите номер по типу: 89134785678</div>                                       
+                        </div>                                             
+                        <div class="form-label-group">
+                            <input type="password" id="password" name="password" class="form-control" placeholder="Password" required>
+                            <label for="password">Пароль</label>
+                            <div class="invalid-feedback">Заполните это поле</div>                                        
+                        </div>                     
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-color-2" name="cancel" data-bs-dismiss="modal">Отменить</button>
+                        <button type="submit" class="btn btn-color-1" name="submit">Зарегистрировать</button>
+                    </div> 
+                </form>                  
+            </div>           
         </div>
     </div>
 
@@ -36,20 +108,192 @@
                 </div>
                 <div class="card-body tab-content" id="myTabContent">
                     <div class="tab-pane fade show active" id="tab1" role="tabpanel" aria-labelledby="tab1-tab">
-                        <h5 class="card-title">Tab 1 Content</h5>
-                        <p class="card-text">This is the content of Tab 1.</p>
+                        {% if not actors %}
+                        <div class="container">
+                            <div class="row justify-content-center align-items-center" style="height: 67vh">
+                                <!-- The above style sets a minimum height to occupy the full viewport height -->
+                                <div class="col-md-6 text-center fs-5">
+                                    <h4>На данный момент ни одного актёра не зарегистрировано :(</h4>
+                                </div>
+                            </div>
+                        </div>
+                        {% elif actors %}
+                        <div class="col table-responsive">
+                            <table class="table bg-white rounded  table-hover">
+                                <thead>
+                                    <tr>
+                                        <th scope="col" width="50">#</th>
+                                        <th scope="col">Фамилия</th>
+                                        <th scope="col">Имя</th>
+                                        <th scope="col">Отчество</th>
+                                        <th scope="col">Телефон</th>
+                                        <th scope="col">Email</th>
+                                        <th scope="col">Управление</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for actor in actors %}
+                                    <tr>
+                                        <th scope="row">{{loop.index}}</th>
+                                        <td>{{actor.last_name}}</td>
+                                        <td>{{actor.first_name}}</td>
+                                        <td>{{actor.patronymic}}</td>
+                                        <td>{{actor.phone}}</td>
+                                        <td>{{actor.email}}</td>
+                                        <td>
+                                            <a href="{{url_for('admin.update_user', user_email=actor.email, franchise_id=franchise_id )}}" class="btn btn-color-1 btn-sm">
+                                                <i class="far fa-edit"></i>
+                                                 Изменить
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                        {% endif %}
                     </div>
                     <div class="tab-pane fade" id="tab2" role="tabpanel" aria-labelledby="tab2-tab">
-                        <h5 class="card-title">Tab 2 Content</h5>
-                        <p class="card-text">This is the content of Tab 2.</p>
+                        {% if not admins %}
+                        <div class="container">
+                            <div class="row justify-content-center align-items-center" style="height: 67vh">
+                                <!-- The above style sets a minimum height to occupy the full viewport height -->
+                                <div class="col-md-6 text-center fs-5">
+                                    <h4>На данный момент ни одного администратора не зарегистрировано :(</h4>
+                                </div>
+                            </div>
+                        </div>
+                        {% elif admins %}
+                        <div class="col table-responsive">
+                            <table class="table bg-white rounded  table-hover">
+                                <thead>
+                                    <tr>
+                                        <th scope="col" width="50">#</th>
+                                        <th scope="col">Фамилия</th>
+                                        <th scope="col">Имя</th>
+                                        <th scope="col">Отчество</th>
+                                        <th scope="col">Телефон</th>
+                                        <th scope="col">Email</th>
+                                        <th scope="col">Управление</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for admin in admins %}
+                                    <tr>
+                                        <th scope="row">{{loop.index}}</th>
+                                        <td>{{admin.last_name}}</td>
+                                        <td>{{admin.first_name}}</td>
+                                        <td>{{admin.patronymic}}</td>
+                                        <td>{{admin.phone}}</td>
+                                        <td>{{admin.email}}</td>
+                                        <td>
+                                            <a href="{{url_for('admin.update_user', user_email=admin.email, franchise_id=franchise_id )}}" class="btn btn-color-1 btn-sm">
+                                                <i class="far fa-edit"></i>
+                                                 Изменить
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                        {% endif %}
                     </div>
                     <div class="tab-pane fade" id="tab3" role="tabpanel" aria-labelledby="tab3-tab">
-                        <h5 class="card-title">Tab 3 Content</h5>
-                        <p class="card-text">This is the content of Tab 3.</p>
+                        {% if not operators %}
+                        <div class="container">
+                            <div class="row justify-content-center align-items-center" style="height: 67vh">
+                                <!-- The above style sets a minimum height to occupy the full viewport height -->
+                                <div class="col-md-6 text-center fs-5">
+                                    <h4>На данный момент ни одного оператора не зарегистрировано :(</h4>
+                                </div>
+                            </div>
+                        </div>
+
+                        {% elif operators %}
+                        <div class="col table-responsive">
+                            <table class="table bg-white rounded  table-hover">
+                                <thead>
+                                    <tr>
+                                        <th scope="col" width="50">#</th>
+                                        <th scope="col">Фамилия</th>
+                                        <th scope="col">Имя</th>
+                                        <th scope="col">Отчество</th>
+                                        <th scope="col">Телефон</th>
+                                        <th scope="col">Email</th>
+                                        <th scope="col">Управление</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for operator in operators %}
+                                    <tr>
+                                        <th scope="row">{{loop.index}}</th>
+                                        <td>{{operator.last_name}}</td>
+                                        <td>{{operator.first_name}}</td>
+                                        <td>{{operator.patronymic}}</td>
+                                        <td>{{operator.phone}}</td>
+                                        <td>{{operator.email}}</td>
+                                        <td>
+                                            <a href="{{url_for('admin.update_user', user_email=operator.email, franchise_id=franchise_id )}}" class="btn btn-color-1 btn-sm">
+                                                <i class="far fa-edit"></i>
+                                                 Изменить
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+
+                        {% endif %}
                     </div>
                     <div class="tab-pane fade" id="tab4" role="tabpanel" aria-labelledby="tab4-tab">
-                        <h5 class="card-title">Tab 4 Content</h5>
-                        <p class="card-text">This is the content of Tab 4.</p>
+                        {% if not bosses %}
+                        <div class="container">
+                            <div class="row justify-content-center align-items-center" style="height: 67vh">
+                                <!-- The above style sets a minimum height to occupy the full viewport height -->
+                                <div class="col-md-6 text-center fs-5">
+                                    <h4>На данный момент ни одного директора/франчайзера не зарегистрировано :(</h4>
+                                </div>
+                            </div>
+                        </div>
+                        {% elif bosses %}
+                        <div class="col table-responsive">
+                            <table class="table bg-white rounded  table-hover">
+                                <thead>
+                                    <tr>
+                                        <th scope="col" width="50">#</th>
+                                        <th scope="col">Фамилия</th>
+                                        <th scope="col">Имя</th>
+                                        <th scope="col">Отчество</th>
+                                        <th scope="col">Телефон</th>
+                                        <th scope="col">Email</th>
+                                        <th scope="col">Роль</th>
+                                        <th scope="col">Управление</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for boss in bosses %}
+                                    <tr>
+                                        <th scope="row">{{loop.index}}</th>
+                                        <td>{{boss.last_name}}</td>
+                                        <td>{{boss.first_name}}</td>
+                                        <td>{{boss.patronymic}}</td>
+                                        <td>{{boss.phone}}</td>
+                                        <td>{{boss.email}}</td>
+                                        <td>{{boss.role}}</td>
+                                        <td>
+                                            <a href="{{url_for('admin.update_user', user_email=boss.email, franchise_id=franchise_id )}}" class="btn btn-color-1 btn-sm">
+                                                <i class="far fa-edit"></i>
+                                                 Изменить
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                        {% endif %}
                     </div>                                        
                 </div>
             </div>
@@ -57,15 +301,6 @@
     </div>
 </div>
 
-<script>
-    $(document).ready(function () {
-        $('#myTab a').on('click', function (e) {
-            e.preventDefault();
-            $(this).tab('show');
-        });
-    });
-</script>
-
-
+<script src="{{ url_for('admin.static', filename='/franchise_employees.js') }}"></script>
 
 {% endblock %}

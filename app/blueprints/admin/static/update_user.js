@@ -1,4 +1,3 @@
-document.querySelector('#city').addEventListener('blur', validateCity);
 document.querySelector('#firstName').addEventListener('blur', validateFirstName);
 document.querySelector('#lastName').addEventListener('blur', validateLastName);
 document.querySelector('#patronymic').addEventListener('blur', validatePatronymic);
@@ -115,10 +114,9 @@ function validatePhone(e) {
       'submit',
       function (event) { 
         const formId = form.getAttribute('id');
-        if (formId === 'updateFranchise' ) {
+        if (formId === 'updateUser' ) {
           if (
             // !form.checkValidity() ||
-            !validateCity() ||
             !validateFirstName() ||
             !validateLastName() ||
             !validatePatronymic() ||

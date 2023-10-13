@@ -115,3 +115,19 @@
     margin: 0 auto;
     overflow-y: auto;
   }
+
+/* Style the select field */
+.form-label-group select {
+  /* Apply similar padding as input fields */
+  padding: var(--input-padding-y) var(--input-padding-x);
+  border: 1px solid #ced4da; /* Add a border style to make it visible */
+  border-radius: .25rem;
+  transition: all .1s ease-in-out;
+}
+
+/* Style the select field when it's focused */
+.form-label-group select:focus {
+  /* Add a border color to indicate focus */
+  border-color: #007bff;
+  /* You can customize the focus styles as needed */
+}

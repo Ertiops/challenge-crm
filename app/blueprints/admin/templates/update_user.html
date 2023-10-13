@@ -2,20 +2,20 @@
 
 {% block content %}
 
-<link rel="stylesheet" href="{{url_for('.static', filename='update_franchise.css')}}" />
+<link rel="stylesheet" href="{{url_for('.static', filename='update_user.css')}}" />
 
 <div class="container-fluid px-4">
     <div class="row my-1">
         <div class="d-flex flex-wrap justify-content-between">
             <div class="p-1 mb-2">
-                <h3 class="fs-4"><a href="{{url_for('admin.franchises')}}" style="color: inherit;text-decoration: inherit;">Управление франшизами<a> \ Информация о франшизе</h3>
+                <h3 class="fs-4"><a href="{{url_for('admin.franchise_employees', franchise_id = user.franchise_id)}}" style="color: inherit;text-decoration: inherit;">Управление сотрудниками<a> \ Информация о сотруднике</h3>
             </div>
         </div>
     </div>
     <div class="row my-1">
         <div class="card bg-white shadow-sm rounded">
             <div class="card-body">
-                <form class="needs-validation form-signin" method="post" id="updateFranchise" novalidate>                                                   
+                <form class="needs-validation form-signin" method="post" id="updateUser" novalidate>                                                   
                     {% for cat, msg in get_flashed_messages(True) %}   
                         {% set categories = cat.split() %}
                         {% if categories[0] == "update" %}                                    
@@ -26,34 +26,50 @@
                                 </div>
                             </div>
                         {%endif%}                                      
-                    {% endfor %}                              
+                    {% endfor %}
+                    <div class="form-label-group">
+                        <select id="role" name="role" class="form-control form-select"  placeholder="Role" autocomplete="off" required> 
+                            <option value="{{user.role}}">{{user.role.capitalize()}}</option>
+                            {% if user.role != 'актёр' %}
+                            <option value="актёр">Актёр</option>
+                            {% endif %}
+                            {% if user.role != 'администратор' %}
+                            <option value="администратор">Администратор</option>
+                            {% endif %}
+                            {% if user.role != 'оператор' %}
+                            <option value="оператор">Оператор</option>
+                            {% endif %}
+                            {% if user.role != 'директор' %}
+                            <option value="директор">Директор</option>
+                            {% endif %}
+                            {% if user.role != 'франчайзер' %}
+                            <option value="франчайзер">Франчайзер</option> 
+                            {% endif %} 
+                        </select>
+                        <div id="role-validation" class="invalid-feedback">Выберите роль из списка</div>                                                                                         
+                    </div>                              
                     <div class="form-label-group">                                        
-                        <input type="text" id="city" name="city" class="form-control"  placeholder="City" autocomplete="off" value="{{franchise.Franchises.city}}" required>
-                        <label for="city">Город</label>
-                        <div id="city-validation" class="invalid-feedback">Заполните это поле</div>                                    
-                    </div>  
-                    <div class="form-label-group">                                        
-                        <input type="text" id="lastName" name="lastName" class="form-control"  placeholder="Last Name" autocomplete="off" value="{{franchise.Users.last_name}}" required>
+                        <input type="text" id="lastName" name="lastName" class="form-control"  placeholder="Last Name" autocomplete="off" value="{{user.last_name}}" required>
                         <label for="lastName">Фамилия</label>
                         <div id="lastname-validation" class="invalid-feedback">Введите корректную фамилию (кириллица без пробелов)</div>                                    
                     </div>                                            
                     <div class="form-label-group">                                        
-                        <input type="text" id="firstName" name="firstName" class="form-control"  placeholder="First Name" autocomplete="off" value="{{franchise.Users.first_name}}" required>
+                        <input type="text" id="firstName" name="firstName" class="form-control"  placeholder="First Name" autocomplete="off" value="{{user.first_name}}" required>
                         <label for="firstName">Имя</label>
                         <div id="firstname-validation" class="invalid-feedback">Введите корректное имя (кириллица без пробелов)</div>                                    
                     </div>                                           
                     <div class="form-label-group">                                        
-                        <input type="text" id="patronymic" name="patronymic" class="form-control"  placeholder="Patronymic" autocomplete="off" value="{{franchise.Users.patronymic}}" required>
+                        <input type="text" id="patronymic" name="patronymic" class="form-control"  placeholder="Patronymic" autocomplete="off" value="{{user.patronymic}}" required>
                         <label for="patronymic">Отчество</label>
                         <div id="patronymic-validation" class="invalid-feedback">Введите корректное имя (кириллица без пробелов)</div>                                    
                     </div>                                            
                     <div class="form-label-group">                                        
-                        <input type="email" id="email" name="email" class="form-control"  placeholder="Email address" autocomplete="off" value="{{franchise.Users.email}}" required>
+                        <input type="email" id="email" name="email" class="form-control"  placeholder="Email address" autocomplete="off" value="{{user.email}}" required>
                         <label for="email">Адрес электронной почты</label>
                         <div id="email-validation" class="invalid-feedback">Введите корректный адрес электронной почты</div>                                       
                     </div>                                        
                     <div class="form-label-group">                                        
-                        <input type="tel" id="phone" name="phone" class="form-control"  placeholder="Phone number" autocomplete="off" value="{{franchise.Users.phone}}" pattern= required>
+                        <input type="tel" id="phone" name="phone" class="form-control"  placeholder="Phone number" autocomplete="off" value="{{user.phone}}" pattern= required>
                         <label for="phone">Номер телефона</label>
                         <div id="phone-validation" class="invalid-feedback">Введите номер по типу: 89134785678</div>                                       
                     </div>                                             
@@ -88,9 +104,7 @@
                             </div>
                         {% endif %}                                      
                     {% endfor %}                                                     
-                    <p>Введите пароль, чтобы подтвердить удаление франшизы, 
-                        связанных с ней сотрудников, 
-                        данные о продажах и иную информацию</p>                                                                       
+                    <p>Введите пароль, чтобы подтвердить удаление сотрудника</p>                                                                       
                     <div class="form-label-group">
                         <input type="password" id="password" name="password" class="form-control" placeholder="Password" required>
                         <label for="password">Пароль</label>
@@ -106,7 +120,7 @@
     </div>
 </div>
 
-<script src="./static/update_franchise.js"></script>
+<script src="./static/update_user.js"></script>
 
 
 

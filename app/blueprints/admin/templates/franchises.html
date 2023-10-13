@@ -86,18 +86,27 @@
                     <tr>
                         <th scope="col" width="50">#</th>
                         <th scope="col">Город</th>
-                        <th scope="col">Франчайзер</th>
-                        <th scope="col">Управление</th>
+                        <th scope="col">Сотрудники</th>
+                        <th scope="col">Идентификатор франшизы</th>
+                        <th scope="col">Удаление</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for franchise in franchises %}
                     <tr>
                         <th scope="row">{{loop.index}}</th>
-                        <td>{{franchise.Franchises.city}}</td>
-                        <td>{{franchise.Users.last_name}} {{franchise.Users.first_name[0]}}. | {{franchise.Users.phone}} | {{franchise.Users.email}}</td>
+                        <td>{{franchise.city}}</td>
+                        <td>{{franchise.user_count}}</td>
                         <td>
-                            <a href="{{url_for('admin.update_franchise', franchise_id = franchise.Franchises.id)}}" class="btn btn-color-1 btn-sm">
+                            <div class="copy-text">
+                                <input type="text" class="text" value="{{franchise.id}}">
+                                <button>
+                                    <i class="fa fa-clone"></i>
+                                </button>
+                            </div>
+                        </td>
+                        <td>
+                            <a href="#" class="btn btn-color-1 btn-sm">
                                 <i class="far fa-edit"></i>
                                  Изменить
                             </a>
