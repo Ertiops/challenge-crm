@@ -1,10 +1,4 @@
 document.querySelector('#city').addEventListener('blur', validateCity);
-document.querySelector('#firstName').addEventListener('blur', validateFirstName);
-document.querySelector('#lastName').addEventListener('blur', validateLastName);
-document.querySelector('#patronymic').addEventListener('blur', validatePatronymic);
-document.querySelector('#email').addEventListener('blur', validateEmail);
-document.querySelector('#phone').addEventListener('blur', validatePhone);
-document.querySelector('#password').addEventListener('blur', validatePassword);
 
 document.querySelectorAll("[name='cancel']").forEach((el) => {el.addEventListener('blur', clearInput)});
 
@@ -27,103 +21,6 @@ function validateCity(e) {
   }
 }
 
-function validateFirstName(e) {
-  const firstName = document.querySelector('#firstName');
-  const re = /[ЁёА-я]/
-  if (reSpaces.test(firstName.value) && re.test(firstName.value)) {
-    firstName.classList.remove('is-invalid');
-    firstName.classList.add('is-valid');
-
-    return true;
-  } else {
-    firstName.classList.add('is-invalid');
-    firstName.classList.remove('is-valid');
-
-    return false;
-  }
-}
-
-function validateLastName(e) {
-  const lastName = document.querySelector('#lastName');
-  const re = /[ЁёА-я]/
-  if (reSpaces.test(lastName.value) && re.test(lastName.value)) {
-    lastName.classList.remove('is-invalid');
-    lastName.classList.add('is-valid');
-
-    return true;
-  } else {
-    lastName.classList.add('is-invalid');
-    lastName.classList.remove('is-valid');
-
-    return false;
-  }
-}
-
-function validatePatronymic(e) {
-  const patronymic = document.querySelector('#patronymic');
-  const re = /[ЁёА-я]/
-  if (reSpaces.test(patronymic.value) && re.test(patronymic.value)) {
-    patronymic.classList.remove('is-invalid');
-    patronymic.classList.add('is-valid');
-
-    return true;
-  } else {
-    patronymic.classList.add('is-invalid');
-    patronymic.classList.remove('is-valid');
-
-    return false;
-  }
-}
-
-
-function validateEmail(e) {
-  const email = document.querySelector('#email');
-  const re = /^([a-zA-Z0-9_\-?\.?]){3,}@([a-zA-Z]){3,}\.([a-zA-Z]){2,5}$/;
-
-  if (reSpaces.test(email.value) && re.test(email.value)) {
-    email.classList.remove('is-invalid');
-    email.classList.add('is-valid');
-
-    return true;
-  } else {
-    email.classList.add('is-invalid');
-    email.classList.remove('is-valid');
-
-    return false;
-  }
-}
-
-function validatePhone(e) {
-  const phone = document.querySelector('#phone');
-  const re = /[0-9]{11}/
-  if (reSpaces.test(phone.value) && re.test(phone.value)) {
-    phone.classList.remove('is-invalid');
-    phone.classList.add('is-valid');
-
-    return true;
-  } else {
-    phone.classList.add('is-invalid');
-    phone.classList.remove('is-valid');
-
-    return false;
-  }
-}
-
-function validatePassword() {
-  const password = document.querySelector('#password');
-  const re = /(.)/;
-  if (re.test(password.value) && reSpaces.test(password.value)) {
-    password.classList.remove('is-invalid');
-    password.classList.add('is-valid');
-
-    return true;
-  } else {
-    password.classList.add('is-invalid');
-    password.classList.remove('is-valid');
-
-    return false;
-  }
-}
 
 (function () {
   const forms = document.querySelectorAll('.needs-validation');
@@ -134,13 +31,7 @@ function validatePassword() {
       function (event) {
         if (
           // !form.checkValidity() ||
-          !validateCity() ||
-          !validateFirstName() ||
-          !validateLastName() ||
-          !validatePatronymic() ||
-          !validateEmail() ||
-          !validatePhone() ||
-          !validatePassword()
+          !validateCity()
         ) {
           event.preventDefault();
           event.stopPropagation();
@@ -187,5 +78,43 @@ $(document).ready(function() {
   if ($("#flashMessage *").length > 0){
     $("#staticBackdrop").modal("show");
   }
+});
+
+// $(document).ready(function() {
+//   // Copy to clipboard function
+//   $(".copy-button").click(function() {
+//       const textToCopy = $(this).parents("tr").find("input.form-control");
+
+//       const tempInput = document.createElement("input");
+//       tempInput.style = "position: absolute; left: -1000px";
+//       tempInput.value = textToCopy.val();
+//       document.body.appendChild(tempInput);
+//       tempInput.select();
+//       document.execCommand("copy");
+//       document.body.removeChild(tempInput);
+
+//       textToCopy.addClass("is-valid");
+
+//   });
+// });
+
+$(document).ready(function() {
+  // Copy to clipboard function
+  $(".copy-button").click(function() {
+    // Remove is-valid class from all text fields except the current one
+    $(".form-control").not($(this).parents("tr").find("input.form-control")).removeClass("is-valid");
+
+    const textToCopy = $(this).parents("tr").find("input.form-control");
+
+    const tempInput = document.createElement("input");
+    tempInput.style = "position: absolute; left: -1000px";
+    tempInput.value = textToCopy.val();
+    document.body.appendChild(tempInput);
+    tempInput.select();
+    document.execCommand("copy");
+    document.body.removeChild(tempInput);
+
+    textToCopy.addClass("is-valid");
+  });
 });
 

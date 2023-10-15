@@ -37,37 +37,7 @@
                                 <input type="text" id="city" name="city" class="form-control"  placeholder="City" autocomplete="off" required>
                                 <label for="city">Город</label>
                                 <div id="city-validation" class="invalid-feedback">Заполните это поле</div>                                    
-                            </div>  
-                            <div class="form-label-group">                                        
-                                <input type="text" id="lastName" name="lastName" class="form-control"  placeholder="Last Name" autocomplete="off" required>
-                                <label for="lastName">Фамилия</label>
-                                <div id="lastname-validation" class="invalid-feedback">Введите корректную фамилию (кириллица без пробелов)</div>                                    
-                            </div>                                            
-                            <div class="form-label-group">                                        
-                                <input type="text" id="firstName" name="firstName" class="form-control"  placeholder="First Name" autocomplete="off" required>
-                                <label for="firstName">Имя</label>
-                                <div id="firstname-validation" class="invalid-feedback">Введите корректное имя (кириллица без пробелов)</div>                                    
-                            </div>                                           
-                            <div class="form-label-group">                                        
-                                <input type="text" id="patronymic" name="patronymic" class="form-control"  placeholder="Patronymic" autocomplete="off" required>
-                                <label for="patronymic">Отчество</label>
-                                <div id="patronymic-validation" class="invalid-feedback">Введите корректное имя (кириллица без пробелов)</div>                                    
-                            </div>                                            
-                            <div class="form-label-group">                                        
-                                <input type="email" id="email" name="email" class="form-control"  placeholder="Email address" autocomplete="off" required>
-                                <label for="email">Адрес электронной почты</label>
-                                <div id="email-validation" class="invalid-feedback">Введите корректный адрес электронной почты</div>                                       
-                            </div>                                        
-                            <div class="form-label-group">                                        
-                                <input type="tel" id="phone" name="phone" class="form-control"  placeholder="Phone number" autocomplete="off" pattern= required>
-                                <label for="phone">Номер телефона</label>
-                                <div id="phone-validation" class="invalid-feedback">Введите номер по типу: 89134785678</div>                                       
-                            </div>                                             
-                            <div class="form-label-group">
-                                <input type="password" id="password" name="password" class="form-control" placeholder="Password" required>
-                                <label for="password">Пароль</label>
-                                <div class="invalid-feedback">Заполните это поле</div>                                        
-                            </div>                     
+                            </div>                    
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-color-2" name="cancel" data-bs-dismiss="modal">Отменить</button>
@@ -83,35 +53,87 @@
         <div class="col table-responsive">
             <table class="table bg-white rounded shadow-sm  table-hover">
                 <thead>
-                    <tr>
+                    <tr class="text-center">
                         <th scope="col" width="50">#</th>
                         <th scope="col">Город</th>
                         <th scope="col">Сотрудники</th>
-                        <th scope="col">Идентификатор франшизы</th>
+                        <th scope="col">Идентификатор</th>
+                        <th scope="col">Редактирование</th>
                         <th scope="col">Удаление</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for franchise in franchises %}
-                    <tr>
+                    <tr class="text-center">
                         <th scope="row">{{loop.index}}</th>
                         <td>{{franchise.city}}</td>
+                        {% if franchise.user_count %}
                         <td>{{franchise.user_count}}</td>
+                        {% else %}
+                        <td>0</td>
+                        {% endif %}
                         <td>
-                            <div class="copy-text">
-                                <input type="text" class="text" value="{{franchise.id}}">
-                                <button>
-                                    <i class="fa fa-clone"></i>
+                            <div class="input-group">
+                                <input type="text" class="form-control" value="{{ franchise.id }}" size="18" readonly>
+                                <button class="btn btn-color-1 btn-sm copy-button" data-text="{ franchise.id }">
+                                    <i class="far fa-light fa-clipboard fa-lg"></i>                                   
                                 </button>
+                            </div>
+                            <div class="alert alert-success copy-success" style="display: none;"></div>
+                        </td>
+                        <td>
+                            <div class="align-items-center">
+                                <a href="#" class="btn btn-color-1 btn-same-size">
+                                    <i class="far fa-edit"></i>
+                                    Изменить
+                                </a>
                             </div>
                         </td>
                         <td>
-                            <a href="#" class="btn btn-color-1 btn-sm">
-                                <i class="far fa-edit"></i>
-                                 Изменить
-                            </a>
+                            <div class="align-items-center">
+                                <a href="#" class="btn btn-color-2 btn-same-size" value="pre-delete" data-bs-toggle="modal" data-bs-target="#staticBackdrop{{loop.index}}">
+                                    Удалить
+                                </a>
+                            </div>
                         </td>
                     </tr>
+
+                    <div class="modal fade" id="staticBackdrop{{loop.index}}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-scrollable">
+                            <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="staticBackdropLabel">Удаление франшизы</h5>
+                                        <button type="button" class="btn-close" name="cancel" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>                       
+                                    <div class="modal-body">
+                                    <form  method="post" class="needs-validation" id="passwordForm" novalidate>
+                                        {% for cat, msg in get_flashed_messages(True) %}   
+                                            {% set categories = cat.split() %}
+                                            {% if categories[0] == "delete" %}                                    
+                                                <div class="form-label-group" id="flashMessage">
+                                                    <div class="alert alert-{{categories[1]}} alert-dismissible fade show" role="alert">
+                                                        {{ msg }}    
+                                                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>                        
+                                                    </div>
+                                                </div>
+                                            {% endif %}                                      
+                                        {% endfor %}                                                     
+                                        <p>Введите пароль, чтобы подтвердить удаление франшизы, связанных с нею сотрудников, бронирований и прочих данных</p>                                                                       
+                                        <div class="form-label-group">
+                                            <input type="password" id="password" name="password" class="form-control" placeholder="Password" required>
+                                            <label for="password">Пароль</label>
+                                            <div class="invalid-feedback">Пароль неверный</div>                                       
+                                        </div>                     
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-color-1" name="cancel" data-bs-dismiss="modal">Отменить</button>
+                                        <button type="submit" class="btn btn-color-2 m-2" name="submit" value="delete">Удалить</button>
+                                    </div> 
+                                </form>                  
+                            </div>           
+                        </div>
+                    </div>
+
                     {% endfor %}
                 </tbody>
             </table>

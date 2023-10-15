@@ -82,7 +82,7 @@ def delete_franchise(id):
     session.delete(franchise)
     session.commit()
 
-def get_franchisers_and_employees_count():
+def get_franchises_and_employees_count():
     """selects franchises, cities and joins franchise employees count"""
     user_count_subquery = (
         session.query(Users.franchise_id, func.count(Users.id).label('user_count'))
