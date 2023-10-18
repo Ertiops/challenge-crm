@@ -39,7 +39,6 @@ class Franchises(Base):
 
 
 
-
 class Users(Base, UserMixin):
     __tablename__ = 'users'
 

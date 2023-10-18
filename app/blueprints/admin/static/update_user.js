@@ -56,6 +56,7 @@ function validateLastName(e) {
   }
 }
 
+
 function validatePatronymic(e) {
   const patronymic = document.querySelector('#patronymic');
   const re = /[ЁёА-я]/

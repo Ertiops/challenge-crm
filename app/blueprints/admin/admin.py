@@ -17,17 +17,38 @@ def statistics():
 def franchises():
     franchises = crud.get_franchises_and_employees_count()
     if request.method == 'POST':
-        id = uuid0.generate()
-        city = request.form['city'].capitalize()
-        crud.add_franchise(id, city)
-        return redirect(url_for('admin.franchises')) 
-        # elif not is_email_unique:
-        #     flash("Данный email уже зарегистрирован", category="danger") 
-        #     return redirect(url_for('admin.franchises'))
-        # elif not is_phone_unique:
-        #     flash("Данный номер уже зарегистрирован", category="danger") 
-        #     return redirect(url_for('admin.franchises'))        
+        if request.form['submit'] == 'register':        
+            id = uuid0.generate()
+            city = request.form['city'].capitalize()
+            crud.add_franchise(id, city)
+            return redirect(url_for('admin.franchises'))         
+        elif request.form['submit'] == 'delete':
+            provided_password = request.form['password']
+            is_valid = check_password_hash(current_user.password_hash, provided_password)
+            if is_valid:
+               franchise_id = request.form['franchise_id']
+               crud.delete_franchise(franchise_id)              
+               return redirect(url_for('admin.franchises'))
+            else:
+                modal_index = request.form['modal_index']
+                flash("Пароль неверный", category=f"delete danger {modal_index}")
+                return redirect(url_for('admin.franchises'))
+        elif request.form['submit'] == 'update':
+            city = request.form['city'].capitalize()
+            if city:
+                franchise_id = request.form['franchise_id']
+                crud.update_franchise(franchise_id, city)               
+                return redirect(url_for('admin.franchises'))
+            else:
+                modal_index = request.form['modal_index']
+                flash("Поле должно быть заполнено", category=f"update danger {modal_index}")
+                return redirect(url_for('admin.franchises'))
 
+
+
+
+
+       
     return render_template('franchises.html', title='Франшизы', franchises=franchises)
 
 

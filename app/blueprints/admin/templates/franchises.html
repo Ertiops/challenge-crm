@@ -20,28 +20,21 @@
                 <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title" id="staticBackdropLabel">Регистрация Франшизы</h5>
-                            <button type="button" class="btn-close" name="cancel" data-bs-dismiss="modal" aria-label="Close"></button>
+                            <button type="button" class="btn-close" name="cancel" data-bs-dismiss="modal" aria-label="Close" onclick="clearRegisterModalInput()"></button>
                         </div>                       
                         <div class="modal-body">
-                        <form class="needs-validation" method="post" id="form" novalidate>                                                   
-                            {% for cat, msg in get_flashed_messages(True) %}                                       
-                            <div class="form-label-group" id="flashMessage">
-                                <div class="alert alert-{{cat}} alert-dismissible fade show" role="alert">
-                                    {{ msg }}    
-                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>                        
-                                </div>
-                            </div>                                      
-                            {% endfor %} 
-                            </br>                            
+                        <form class="registration needs-validation" method="post" id="registrationForm" novalidate>                                                   
+                            <!-- Set here flashed message if you need                          -->
+                            </br>
                             <div class="form-label-group">                                        
                                 <input type="text" id="city" name="city" class="form-control"  placeholder="City" autocomplete="off" required>
                                 <label for="city">Город</label>
-                                <div id="city-validation" class="invalid-feedback">Заполните это поле</div>                                    
+                                <div id="city-validation" class="invalid-feedback">Заполните это поле кириллическими символами</div>                                    
                             </div>                    
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-color-2" name="cancel" data-bs-dismiss="modal">Отменить</button>
-                            <button type="submit" class="btn btn-color-1" name="submit">Зарегистрировать</button>
+                            <button type="button" class="btn btn-color-2" id="cancel" name="cancel" data-bs-dismiss="modal" onclick="clearRegisterModalInput()">Отменить</button>
+                            <button type="submit" class="btn btn-color-1" id="submit" name="submit" value="register">Зарегистрировать</button>
                         </div> 
                     </form>                  
                 </div>           
@@ -64,6 +57,7 @@
                 </thead>
                 <tbody>
                     {% for franchise in franchises %}
+                    {% set modal_id = loop.index %}
                     <tr class="text-center">
                         <th scope="row">{{loop.index}}</th>
                         <td>{{franchise.city}}</td>
@@ -75,7 +69,7 @@
                         <td>
                             <div class="input-group">
                                 <input type="text" class="form-control" value="{{ franchise.id }}" size="18" readonly>
-                                <button class="btn btn-color-1 btn-sm copy-button" data-text="{ franchise.id }">
+                                <button class="btn btn-color-1 btn-sm copy-button" data-text="{{ franchise.id }}">
                                     <i class="far fa-light fa-clipboard fa-lg"></i>                                   
                                 </button>
                             </div>
@@ -83,7 +77,7 @@
                         </td>
                         <td>
                             <div class="align-items-center">
-                                <a href="#" class="btn btn-color-1 btn-same-size">
+                                <a href="#" class="btn btn-color-1 btn-same-size" value="pre-update" data-bs-toggle="modal" data-bs-target="#staticBackdropUpdate{{modal_id}}">
                                     <i class="far fa-edit"></i>
                                     Изменить
                                 </a>
@@ -91,49 +85,88 @@
                         </td>
                         <td>
                             <div class="align-items-center">
-                                <a href="#" class="btn btn-color-2 btn-same-size" value="pre-delete" data-bs-toggle="modal" data-bs-target="#staticBackdrop{{loop.index}}">
+                                <a href="#" class="btn btn-color-2 btn-same-size" value="pre-delete" data-bs-toggle="modal" data-bs-target="#staticBackdrop{{modal_id}}">
                                     Удалить
                                 </a>
                             </div>
                         </td>
                     </tr>
 
-                    <div class="modal fade" id="staticBackdrop{{loop.index}}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                    <div class="modal fade" id="staticBackdropUpdate{{modal_id}}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropUpdateLabel{{modal_id}}" aria-hidden="true">
                         <div class="modal-dialog modal-dialog-scrollable">
                             <div class="modal-content">
                                     <div class="modal-header">
-                                        <h5 class="modal-title" id="staticBackdropLabel">Удаление франшизы</h5>
-                                        <button type="button" class="btn-close" name="cancel" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        <h5 class="modal-title" id="staticBackdropUpdateLabel{{modal_id}}">Редактирование Франшизы{{modal_id}}</h5>
+                                        <button type="button" class="btn-close" name="cancel" data-bs-dismiss="modal" aria-label="Close" onclick="clearUpdateModalInput('{{modal_id}}', '{{franchise.city}}')"></button>
                                     </div>                       
                                     <div class="modal-body">
-                                    <form  method="post" class="needs-validation" id="passwordForm" novalidate>
+                                    <form class="registration" method="post" id="updateForm{{modal_id}}" novalidate>                                                   
                                         {% for cat, msg in get_flashed_messages(True) %}   
                                             {% set categories = cat.split() %}
-                                            {% if categories[0] == "delete" %}                                    
-                                                <div class="form-label-group" id="flashMessage">
+                                            {% if categories[0] == "update" and categories[2] == modal_id | string %}                                    
+                                                <div class="form-label-group" id="flashMessageUpdate{{modal_id}}">
                                                     <div class="alert alert-{{categories[1]}} alert-dismissible fade show" role="alert">
                                                         {{ msg }}    
                                                         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>                        
                                                     </div>
                                                 </div>
                                             {% endif %}                                      
-                                        {% endfor %}                                                     
-                                        <p>Введите пароль, чтобы подтвердить удаление франшизы, связанных с нею сотрудников, бронирований и прочих данных</p>                                                                       
-                                        <div class="form-label-group">
-                                            <input type="password" id="password" name="password" class="form-control" placeholder="Password" required>
-                                            <label for="password">Пароль</label>
-                                            <div class="invalid-feedback">Пароль неверный</div>                                       
-                                        </div>                     
+                                        {% endfor %}    
+                                        </br>
+                                        <div class="form-label-group">                                        
+                                            <input type="text" id="city{{modal_id}}" name="city" class="form-control" value="{{franchise.city}}" placeholder="City" autocomplete="off" required>
+                                            <label for="city{{modal_id}}">Город</label> 
+                                            <input type="hidden" id ="franchise_id_update{{modal_id}}" name="franchise_id" value="{{franchise.id}}" >
+                                            <input type="hidden" id ="modal_index_update{{modal_id}}" name="modal_index" value="{{modal_id}}" >                                                                                
+                                        </div>                    
                                     </div>
                                     <div class="modal-footer">
-                                        <button type="button" class="btn btn-color-1" name="cancel" data-bs-dismiss="modal">Отменить</button>
-                                        <button type="submit" class="btn btn-color-2 m-2" name="submit" value="delete">Удалить</button>
+                                        <button type="button" class="btn btn-color-2" id="cancel{{modal_id}}" name="cancel" data-bs-dismiss="modal" onclick="clearUpdateModalInput('{{modal_id}}', '{{franchise.city}}')">Отменить</button>
+                                        <button type="submit" class="btn btn-color-1" id="submit{{modal_id}}" name="submit" value="update">Изменить</button>
                                     </div> 
                                 </form>                  
                             </div>           
                         </div>
                     </div>
 
+
+                    <div class="modal fade" id="staticBackdrop{{modal_id}}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel{{modal_id}}" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-scrollable">
+                            <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="staticBackdropLabel{{modal_id}}">Удаление франшизы</h5>
+                                        <button type="button" class="btn-close" name="cancel" data-bs-dismiss="modal" aria-label="Close" onclick="clearDeleteModalInput('{{modal_id}}')"></button>
+                                    </div>                       
+                                    <div class="modal-body">
+                                    <form  method="post" class="deletion" id="passwordForm{{modal_id}}" novalidate>
+                                        {% for cat, msg in get_flashed_messages(True) %}   
+                                            {% set categories = cat.split() %}
+                                            {% if categories[0] == "delete" and categories[2] == modal_id | string %}                                    
+                                                <div class="form-label-group" id="flashMessage{{modal_id}}">
+                                                    <div class="alert alert-{{categories[1]}} alert-dismissible fade show" role="alert">
+                                                        {{ msg }}    
+                                                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>                        
+                                                    </div>
+                                                </div>
+                                            {% endif %}                                      
+                                        {% endfor %}                                                  
+                                        <p>Введите пароль{{modal_id}}, чтобы подтвердить удаление франшизы, связанных с нею сотрудников, бронирований и прочих данных</p>                                                                       
+                                        <div class="form-label-group">
+                                            <input type="password" id="password{{modal_id}}" name="password" class="form-control" placeholder="Password" required>
+                                            <label for="password{{modal_id}}">Пароль</label>
+                                            <div class="invalid-feedback">Введите пароль</div>
+                                            <input type="hidden" id ="franchise_id{{modal_id}}" name="franchise_id" value="{{franchise.id}}" >
+                                            <input type="hidden" id ="modal_index{{modal_id}}" name="modal_index" value="{{modal_id}}" >                                       
+                                        </div>                     
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-color-1" id="btn_{{modal_id}}" name="cancel" onclick="clearDeleteModalInput('{{modal_id}}')" data-bs-dismiss="modal">Отменить</button>
+                                        <button type="submit" class="btn btn-color-2 m-2" id="submit_{{modal_id}}" name="submit" value="delete">Удалить</button>
+                                    </div> 
+                                </form>                  
+                            </div>           
+                        </div>
+                    </div>
                     {% endfor %}
                 </tbody>
             </table>

@@ -4,6 +4,7 @@ from werkzeug.security import check_password_hash
 import crud
 from models.models import Users, Owners
 from blueprints.admin.admin import admin
+import custom_defs
 
 
 
