@@ -11,29 +11,40 @@
                 <h3 class="fs-4">Управление франшизами</h3>
             </div>
             <div class="p-1 mb-2">
-                <a href="#" class="btn btn-color-1" data-bs-toggle="modal" data-bs-target="#staticBackdrop"><i class="fa fa-plus-circle"></i>  Создать</a>
+                <a href="#" class="btn btn-color-1" data-bs-toggle="modal" data-bs-target="#staticBackdropRegister0"><i class="fa fa-plus-circle"></i>  Создать</a>
             </div>
         </div>
 
-        <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal fade" id="staticBackdropRegister0" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-scrollable">
                 <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title" id="staticBackdropLabel">Регистрация Франшизы</h5>
-                            <button type="button" class="btn-close" name="cancel" data-bs-dismiss="modal" aria-label="Close" onclick="clearRegisterModalInput()"></button>
+                            <h5 class="modal-title" id="staticBackdropRegister0Label">Регистрация Франшизы</h5>
+                            <button type="button" class="btn-close" name="cancel" data-bs-dismiss="modal" aria-label="Close" onclick="clearRegisterModalInput(0)"></button>
                         </div>                       
                         <div class="modal-body">
                         <form class="registration needs-validation" method="post" id="registrationForm" novalidate>                                                   
                             <!-- Set here flashed message if you need                          -->
+                        {% for cat, msg in get_flashed_messages(True) %}   
+                          {% set categories = cat.split() %}
+                            {% if categories[0] == "register" %}                              
+                                <div class="form-label-group" id="flashMessageRegister{{categories[2]}}">
+                                    <div class="alert alert-{{categories[1]}} alert-dismissible fade show" role="alert">
+                                        {{ msg }}    
+                                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>                        
+                                    </div>
+                                </div>
+                            {% endif %}                                      
+                        {% endfor %}                              
                             </br>
                             <div class="form-label-group">                                        
                                 <input type="text" id="city" name="city" class="form-control"  placeholder="City" autocomplete="off" required>
                                 <label for="city">Город</label>
-                                <div id="city-validation" class="invalid-feedback">Заполните это поле кириллическими символами</div>                                    
+                                <div id="city-validation" class="invalid-feedback">Заполните это поле</div>                                    
                             </div>                    
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-color-2" id="cancel" name="cancel" data-bs-dismiss="modal" onclick="clearRegisterModalInput()">Отменить</button>
+                            <button type="button" class="btn btn-color-2" id="cancel" name="cancel" data-bs-dismiss="modal" onclick="clearRegisterModalInput(0)">Отменить</button>
                             <button type="submit" class="btn btn-color-1" id="submit" name="submit" value="register">Зарегистрировать</button>
                         </div> 
                     </form>                  
@@ -150,7 +161,7 @@
                                                 </div>
                                             {% endif %}                                      
                                         {% endfor %}                                                  
-                                        <p>Введите пароль{{modal_id}}, чтобы подтвердить удаление франшизы, связанных с нею сотрудников, бронирований и прочих данных</p>                                                                       
+                                        <p>Введите пароль, чтобы подтвердить удаление франшизы, связанных с нею сотрудников, бронирований и прочих данных</p>                                                                       
                                         <div class="form-label-group">
                                             <input type="password" id="password{{modal_id}}" name="password" class="form-control" placeholder="Password" required>
                                             <label for="password{{modal_id}}">Пароль</label>

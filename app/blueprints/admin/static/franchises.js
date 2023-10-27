@@ -68,7 +68,21 @@ function clearDeleteModalInput(modalId) {
 
   // const flashMessage = modal.querySelector('.form-label-group #flashMessage' + modalId);
   const flashMessage = document.getElementById('flashMessage' + modalId);
-  console.log(flashMessage)
+  if (flashMessage) {
+    flashMessage.parentNode.removeChild(flashMessage);
+  }
+}
+
+function clearRegisterModalInput(modalId) {
+  const modal = document.getElementById('staticBackdropRegister' + modalId);
+  const cityInput = modal.querySelector('input[type="text"]');
+  if (cityInput) {
+    cityInput.value = '';
+  }
+  cityInput.classList.remove('is-invalid', 'is-valid');
+
+  // const flashMessage = modal.querySelector('.form-label-group #flashMessage' + modalId);
+  const flashMessage = document.getElementById('flashMessageRegister' + modalId);
   if (flashMessage) {
     flashMessage.parentNode.removeChild(flashMessage);
   }
@@ -84,7 +98,8 @@ function openModalsWithFlashedMessages() {
   // Iterate through the modals
   modals.forEach(modal => {
     // Check if a flash message element exists for this modal
-    const modalId = modal.id.replace(/(staticBackdrop|staticBackdropUpdate)/, '');
+    const modalId = modal.id.replace(/(staticBackdrop|staticBackdropUpdate|staticBackdropRegister)/, '');
+    console.log(modalId)
 
     if (document.getElementById('flashMessage' + modalId)) {
       // If a flash message exists, open the modal

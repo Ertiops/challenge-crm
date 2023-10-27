@@ -39,7 +39,7 @@
                         class="fas fa-chart-line me-2"></i>Аналитика</a>
                 <a href="#" class="list-group-item list-group-item-action bg-transparent second-text fw-bold"><i
                         class="fas fa-paperclip me-2"></i>Отчеты</a>
-                <a href="{{ url_for('logout') }}" class="list-group-item list-group-item-action bg-transparent text-danger fw-bold"><i
+                <a href="{{ url_for('logout', role=current_user.role) }}" class="list-group-item list-group-item-action bg-transparent text-danger fw-bold"><i
                         class="fas fa-power-off me-2"></i>Выйти</a>
             </div>
         </div>
@@ -69,7 +69,7 @@
                             <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                                 <li><a class="dropdown-item" href="#">Профиль</a></li>
                                 <li><a class="dropdown-item" href="#">Настройки</a></li>
-                                <li><a class="dropdown-item" href="{{ url_for('logout') }}">Выйти</a></li>
+                                <li><a class="dropdown-item" href="{{ url_for('logout', role=current_user.role) }}">Выйти</a></li>
                             </ul>
                         </li>
                     </ul>

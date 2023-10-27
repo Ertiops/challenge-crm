@@ -19,25 +19,25 @@
         <thead>
             <tr>
                 <th scope="col" width="50">#</th>
-                <th scope="col">Город</th>
-                <th scope="col">Актёры</th>
-                <th scope="col">Операторы</th>
-                <th scope="col">Администраторы</th>
-                <th scope="col">Руководство</th>
-                <th scope="col">Управление</th>
+                <th scope="col" class="text-center">Город</th>
+                <th scope="col" class="text-center">Актёры</th>
+                <th scope="col" class="text-center">Администраторы</th>
+                <th scope="col" class="text-center">Операторы</th>
+                <th scope="col" class="text-center">Руководство</th>
+                <th scope="col" class="text-center">Управление</th>
             </tr>
         </thead>
         <tbody>
             {% for franchise in franchises %}
             <tr>
                 <th scope="row">{{loop.index}}</th>
-                <td>{{franchise.Franchises.city}}</td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td>
-                    <a href="{{url_for('admin.franchise_employees', franchise_id = franchise.Franchises.id)}}" class="btn btn-color-1 btn-sm">
+                <td class="text-center">{{franchise.city}}</td>
+                <td class="text-center">{{franchise.actor_count or 0}}</td>
+                <td class="text-center">{{franchise.admin_count or 0}}</td>
+                <td class="text-center">{{franchise.operator_count or 0}}</td>
+                <td class="text-center">{{franchise.supervisor_count or 0}}</td>
+                <td class="text-center">
+                    <a href="{{url_for('admin.franchise_employees', franchise_id = franchise.id)}}" class="btn btn-color-1 btn-sm">
                         <i class="far fa-edit"></i>
                          Изменить
                     </a>

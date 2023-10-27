@@ -1,6 +1,7 @@
 from flask_login import login_user, LoginManager, login_required, logout_user, current_user
-from flask import Flask, render_template, request, redirect, url_for, flash, abort, session
+from flask import Flask, render_template, request, redirect, url_for, flash, abort
 from werkzeug.security import check_password_hash
+from crud import OwnersCRUD, EmployeesCRUD
 import crud
 from models.models import Users, Owners
 from blueprints.admin.admin import admin
@@ -9,78 +10,92 @@ import custom_defs
 
 
 app = Flask(__name__, template_folder='./templates')
-# app.config.from_object(__name__)
 app.config['SECRET_KEY'] = "lskhglojihslsJHBShuldsBGHD12436"
+
+app.register_blueprint(admin, url_prefix="/admin")
 
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
 
-@login_manager.user_loader
-def load_user(user_id):
-    return crud.session.query(Users).get(str(user_id))
 
 @login_manager.user_loader
-def load_user(user_id):
-    return crud.session.query(Owners).get(str(user_id))
-
-
-app.register_blueprint(admin, url_prefix="/admin")
+def load_user(user_id: str):
+    employee = EmployeesCRUD.get_employee_by_id(user_id)
+    if employee:
+        return employee
+    else:
+        owner = OwnersCRUD.get_owner_by_id(user_id)
+        if owner:
+            return owner
+    return None
 
 
 
 @app.route("/", methods=['GET', 'POST'])
 def login():
     if current_user.is_authenticated:
-        return redirect(url_for('admin.statistics')) 
+        if current_user.role != "владелец":
+            # заменить на начальную страницу блюпринта, когда у работников он появится            
+            return redirect(url_for('admin.franchises'))
+        else:
+            return redirect(url_for('admin.statistics'))     
     else:
         if request.method == 'POST':
             email = request.form['email']
             password = request.form['password']
-            role = crud.get_user(email).role
-            user = crud.session.query(Users).filter_by(email=email).first()
+            user = EmployeesCRUD.get_user(email)
             if user:
                 if check_password_hash(user.password_hash, password):
                     login_user(user)
-                    if role == ('администратор' or 'франчайзер' or 'работник' or 'оператор'):
-                        return redirect(url_for('admin.statistics'))
-                    else:
-                        abort(401)
+                    print("yes")
+                    return redirect(url_for('admin.franchises'))
                 else:
-                    flash("Неверный Email или пароль", category="danger")
+                    flash("Неверный пароль", category="primary")
+                    return redirect(url_for('login'))
+            else:
+                flash("Неверный Email", category="primary")
+                return redirect(url_for('login'))                
 
     return render_template('login.html')
 
+
 @app.route("/login_owner", methods=['GET', 'POST'])
-def login_owner():
-    
+def login_owner():   
     if current_user.is_authenticated:
-        return redirect(url_for('admin.statistics'))
+        if current_user.role == "владелец":
+            return redirect(url_for('admin.statistics'))
+        else:
+            # заменить на начальную страницу блюпринта, когд у работников он появится
+            return redirect(url_for('admin.franchises')) 
     else:
         if request.method == 'POST':
             email = request.form['email']
             password = request.form['password']
-            role = crud.get_owner(email).role
-            user = crud.session.query(Owners).filter_by(email=email).first()
-            if user:
-                if check_password_hash(user.password_hash, password):
-                    login_user(user)
-                    if role == 'владелец':
-                        return redirect(url_for('admin.statistics'))
-                    else:
-                        abort(401)
+            owner = OwnersCRUD.get_owner(email)
+            if owner:
+                if check_password_hash(owner.password_hash, password):
+                    login_user(owner)
+                    return redirect(url_for('admin.statistics'))
                 else:
-                    flash("Неверный Email или пароль", category="danger")
-
+                    flash("Неверный пароль", category="primary")
+                    return redirect(url_for('login_owner'))
+            else:
+                flash("Неверный Email", category="primary")
+                return redirect(url_for('login_owner'))               
     return render_template('login_owner.html')
 
 
-@app.route("/logout", methods=['GET', 'POST'])
+@app.route("/logout/<role>", methods=['GET', 'POST'])
 @login_required
-def logout():
+def logout(role):
     logout_user()
-    flash('Вы вышли из системы', category="primary")
-    return redirect(url_for('login'))
+    flash('Вы вышли из системы', category="primary")    
+    if role == "владелец":
+        return redirect(url_for('login_owner'))
+    else:
+        return redirect(url_for('login'))
+
 
 
 
