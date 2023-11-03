@@ -287,13 +287,3 @@ class ReservationsCRUD:
         session.close()
 
 
-
-
-
-
-
-
-
-
-
-

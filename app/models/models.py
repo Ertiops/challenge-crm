@@ -1,11 +1,12 @@
 from flask_login import UserMixin
-from sqlalchemy import Column, Integer, String, TIMESTAMP, ForeignKey, UUID, DateTime
+from sqlalchemy import Column, Integer, String, TIMESTAMP, ForeignKey, UUID, DateTime, Boolean
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 import uuid
 from datetime import datetime
 import pytz
 from werkzeug.security import generate_password_hash, check_password_hash
+
 
 
 Base  = declarative_base()
@@ -52,6 +53,7 @@ class Users(Base, UserMixin):
     role = Column(String(20), nullable=False)
     franchise_id = Column(UUID(as_uuid=True), ForeignKey("franchises.id", ondelete="CASCADE"), nullable=False)
     created_at = Column(DateTime, nullable=False, default=datetime.now(pytz.timezone('Europe/Moscow')))
+    verified = Column(Boolean, default=False)
 
     franchises=relationship('Franchises')
 

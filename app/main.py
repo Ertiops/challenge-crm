@@ -1,11 +1,11 @@
 from flask_login import login_user, LoginManager, login_required, logout_user, current_user
-from flask import Flask, render_template, request, redirect, url_for, flash, abort
+from flask import Flask, render_template, request, redirect, url_for, flash, abort, current_app
+from flask_redmail import RedMail
 from werkzeug.security import check_password_hash
-from crud import OwnersCRUD, EmployeesCRUD
-import crud
+from crud import OwnersCRUD, EmployeesCRUD, ReservationsCRUD, session
 from models.models import Users, Owners
 from blueprints.admin.admin import admin
-import custom_defs
+import jwt
 
 
 
@@ -17,6 +17,13 @@ app.register_blueprint(admin, url_prefix="/admin")
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
+mail = RedMail()
+
+app.config["EMAIL_HOST"] = "smtp.gmail.com"
+app.config['EMAIL_PORT'] = 587
+app.config['EMAIL_USERNAME'] = 'zzzeni42@gmail.com'
+app.config['EMAIL_PASSWORD'] = 'qjxc ttrf fjao rlga'
+mail.init_app(app)
 
 
 @login_manager.user_loader
@@ -30,6 +37,14 @@ def load_user(user_id: str):
             return owner
     return None
 
+@app.route("/vefify-email/<token>")
+def verify_email(token):
+    data = jwt.decode(token, app.config["SECRET_KEY"], algorithms=['HS256'])
+    email = data["email"]
+    user = session.query(Users).filter_by(email=email).first()
+    user.verified = True
+    session.commit()
+    return redirect(url_for('admin.statistics'))
 
 
 @app.route("/", methods=['GET', 'POST'])
@@ -49,13 +64,24 @@ def login():
                 if check_password_hash(user.password_hash, password):
                     login_user(user)
                     print("yes")
+                    if current_user.verified != True:
+                        token = jwt.encode({"email": email}, current_app.config["SECRET_KEY"])
+                        mail.send(
+                        subject="Verify email",
+                        receivers=email,
+                        html_template="verify.html",
+                        body_params={
+                            "token": token
+                        }
+                    )
                     return redirect(url_for('admin.franchises'))
                 else:
                     flash("Неверный пароль", category="primary")
                     return redirect(url_for('login'))
             else:
                 flash("Неверный Email", category="primary")
-                return redirect(url_for('login'))                
+                return redirect(url_for('login'))    
+                        
 
     return render_template('login.html')
 
@@ -117,7 +143,7 @@ def formreturns():
     price = request.form['price']
     franchise = request.form['franchise']
 
-    crud.add_reservation(name, phone, email, quest, date, time, guest_num, price, franchise)
+    ReservationsCRUD.add_reservation(name, phone, email, quest, date, time, guest_num, price, franchise)
 
     return redirect(url_for('login'))
     # return str(date)
