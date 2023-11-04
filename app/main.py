@@ -3,8 +3,9 @@ from flask import Flask, render_template, request, redirect, url_for, flash, abo
 from flask_redmail import RedMail
 from werkzeug.security import check_password_hash
 from crud import OwnersCRUD, EmployeesCRUD, ReservationsCRUD, session
-from models.models import Users, Owners
+from models.models import Users
 from blueprints.admin.admin import admin
+import datetime
 import jwt
 
 
@@ -64,12 +65,16 @@ def login():
                 if check_password_hash(user.password_hash, password):
                     login_user(user)
                     print("yes")
+                    # генерация токена и отправка письма для верификации почты
                     if current_user.verified != True:
-                        token = jwt.encode({"email": email}, current_app.config["SECRET_KEY"])
+                        token = jwt.encode({
+                            "email": email,
+                            "exp":datetime.datetime.now(tz=datetime.timezone.utc) + datetime.timedelta(seconds=180)
+                            }, current_app.config["SECRET_KEY"])
                         mail.send(
-                        subject="Verify email",
+                        subject="Подтверждение почты",
                         receivers=email,
-                        html_template="verify.html",
+                        html_template="mail/verify.html",
                         body_params={
                             "token": token
                         }
@@ -111,6 +116,47 @@ def login_owner():
                 return redirect(url_for('login_owner'))               
     return render_template('login_owner.html')
 
+
+@app.route("/forgot_password", methods=['GET', 'POST'])
+def forgot_password():
+    email = request.form.get('email')
+    user = session.query(Users).filter_by(email=email).first()
+    if user:
+            token = jwt.encode({
+                "email": email,
+                "exp":datetime.datetime.now(tz=datetime.timezone.utc) + datetime.timedelta(seconds=180)
+                }, current_app.config["SECRET_KEY"])
+            mail.send(
+            subject="Смена пароля",
+            receivers=email,
+            html_template="mail/pass_reset.html",
+            body_params={
+                "token": token
+            }
+        )
+    return render_template('forgot_password.html')
+
+@app.route("/verify_token/<token>", methods=['GET', 'POST'])
+def verify_token(token):
+    if request.method == 'POST':
+        password = request.form.get('password')
+        data = jwt.decode(token, app.config["SECRET_KEY"], algorithms=['HS256'])
+        email = data['email']
+        user = session.query(Users).filter_by(email=email).first()
+        print(password, flush=True)
+        print(user, flush=True)
+        print(email, flush=True)
+        if user is None:
+            flash('Неверный токен', 'warning')
+            return 'bruh'
+        else:
+            user.set_password(password)
+            session.commit()
+            session.close()
+            return redirect(url_for('login'))
+    else:
+        return render_template('change_password.html', token=token)
+    
 
 @app.route("/logout/<role>", methods=['GET', 'POST'])
 @login_required
