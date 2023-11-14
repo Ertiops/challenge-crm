@@ -40,12 +40,17 @@ def load_user(user_id: str):
 
 @app.route("/vefify-email/<token>")
 def verify_email(token):
-    data = jwt.decode(token, app.config["SECRET_KEY"], algorithms=['HS256'])
-    email = data["email"]
-    user = session.query(Users).filter_by(email=email).first()
-    user.verified = True
-    session.commit()
-    return redirect(url_for('admin.statistics'))
+    try:
+        data = jwt.decode(token, app.config["SECRET_KEY"], algorithms=['HS256'])
+        email = data["email"]
+        user = session.query(Users).filter_by(email=email).first()
+        user.verified = True
+        session.commit()
+        return redirect(url_for('admin.statistics'))
+    except jwt.exceptions.ExpiredSignatureError:
+        return redirect(url_for('login'))
+    
+    #добавить страницу для экспиред кода
 
 
 @app.route("/", methods=['GET', 'POST'])
@@ -119,6 +124,7 @@ def login_owner():
 
 @app.route("/forgot_password", methods=['GET', 'POST'])
 def forgot_password():
+    '''ввод почты, генерация токена и отправка письма'''
     email = request.form.get('email')
     user = session.query(Users).filter_by(email=email).first()
     if user:
@@ -138,6 +144,7 @@ def forgot_password():
 
 @app.route("/verify_token/<token>", methods=['GET', 'POST'])
 def verify_token(token):
+    '''GET - ввод нового пароля, POST - декодинг токена, хэширование и смена пароля'''
     if request.method == 'POST':
         password = request.form.get('password')
         data = jwt.decode(token, app.config["SECRET_KEY"], algorithms=['HS256'])
@@ -147,7 +154,7 @@ def verify_token(token):
         print(user, flush=True)
         print(email, flush=True)
         if user is None:
-            flash('Неверный токен', 'warning')
+            # flash('Неверный токен', 'warning')
             return 'bruh'
         else:
             user.set_password(password)
